@@ -6,165 +6,18 @@ const faixa = (p, a, b) => limitar((p - a) / (b - a), 0, 1);
 const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function medir(evento, dados){ window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event:evento }, dados || {})); }
 
-const FATIAS = 3;
-
 const LOGO_LINHA = LOGO.letras.reduce((t, l) => t + l.w + l.gap, 0);
-function montarLetras(alvo, comFatias){
+function montarLetras(alvo){
   alvo.textContent = '';
   LOGO.letras.forEach(l => {
     const lt = document.createElement('span');
     lt.className = 'lt';
     lt.style.setProperty('--w', l.w);
     lt.style.setProperty('--gap', l.gap);
-    const img = `<img${comFatias ? ' class="fatia"' : ''} src="${l.src}" alt="" draggable="false">`;
-    lt.innerHTML = comFatias ? img.repeat(FATIAS) : img;
+    lt.innerHTML = `<img src="${l.src}" alt="" draggable="false">`;
     alvo.appendChild(lt);
   });
 }
-const linhaLogo = document.querySelector('[data-quebra]');
-linhaLogo.setAttribute('aria-hidden', 'true');
-montarLetras(linhaLogo, true);
-const letrasLogo = [...linhaLogo.querySelectorAll('.lt')];
-const totalPedacos = letrasLogo.length * FATIAS;
-$('zerouTotal').textContent = totalPedacos;
-
-let audio = null;
-let somLigado = true;
-function tocarMoeda(){
-  if(!somLigado) return;
-  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-  const agora = audio.currentTime;
-  const saida = audio.createGain();
-  saida.gain.value = .16;
-  saida.connect(audio.destination);
-  [[1568, 0, .07], [2093, .07, .32]].forEach(([freq, ini, dur]) => {
-    const osc = audio.createOscillator();
-    const env = audio.createGain();
-    osc.type = 'square';
-    osc.frequency.value = freq;
-    env.gain.setValueAtTime(0, agora + ini);
-    env.gain.linearRampToValueAtTime(1, agora + ini + .005);
-    env.gain.exponentialRampToValueAtTime(.001, agora + ini + dur);
-    osc.connect(env); env.connect(saida);
-    osc.start(agora + ini); osc.stop(agora + ini + dur + .02);
-  });
-}
-function tocarQuebra(){
-  if(!somLigado || !audio) return;
-  const agora = audio.currentTime;
-  const tam = audio.sampleRate * .06;
-  const buf = audio.createBuffer(1, tam, audio.sampleRate);
-  const d = buf.getChannelData(0);
-  for(let i = 0; i < tam; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / tam);
-  const ruido = audio.createBufferSource();
-  const filtro = audio.createBiquadFilter();
-  const env = audio.createGain();
-  ruido.buffer = buf; filtro.type = 'lowpass'; filtro.frequency.value = 1800; env.gain.value = .12;
-  ruido.connect(filtro); filtro.connect(env); env.connect(audio.destination);
-  ruido.start(agora);
-}
-$('somBtn').addEventListener('click', e => {
-  somLigado = !somLigado;
-  e.currentTarget.setAttribute('aria-pressed', somLigado);
-});
-
-let moedas = 0;
-const cacos = [];
-
-function letraMaisProxima(x, y){
-  let melhor = null, dist = Infinity;
-  letrasLogo.forEach(lt => {
-    if(!lt.querySelector('.fatia:not(.is-gone)')) return;
-    const b = lt.getBoundingClientRect();
-    const d = Math.hypot(b.left + b.width / 2 - x, b.top + b.height / 2 - y);
-    if(d < dist){ dist = d; melhor = lt; }
-  });
-  return melhor;
-}
-
-function quebrar(x, y){
-  const lt = letraMaisProxima(x, y);
-  if(!lt) return;
-  const restantes = [...lt.querySelectorAll('.fatia:not(.is-gone)')];
-  const fatia = restantes[restantes.length - 1];
-  const indice = [...lt.querySelectorAll('.fatia')].indexOf(fatia);
-
-  const b = lt.getBoundingClientRect();
-  const caco = fatia.cloneNode();
-  caco.className = 'caco';
-  caco.style.width = b.width + 'px';
-  caco.style.height = b.height + 'px';
-  caco.style.clipPath = getComputedStyle(fatia).clipPath;
-  document.body.appendChild(caco);
-  fatia.classList.add('is-gone');
-  cacos.push({ el:caco, x:b.left, y:b.top, vx:(Math.random() - .5) * 420, vy:-260 - Math.random() * 200, r:0, vr:(Math.random() - .5) * 540 });
-  if(!animandoCacos){ animandoCacos = true; requestAnimationFrame(cairCacos); }
-
-  lt.classList.remove('is-hit'); void lt.offsetWidth; lt.classList.add('is-hit');
-
-  soltarMoeda(x, y);
-  tocarQuebra();
-  tocarMoeda();
-
-  moedas++;
-  $('contador').textContent = String(moedas).padStart(2, '0');
-  $('placar').classList.remove('is-bump'); void $('placar').offsetWidth; $('placar').classList.add('is-bump');
-  medir('logo_moeda', { moedas, letra: indice });
-
-  if(moedas % totalPedacos === 0) setTimeout(logoZerado, 700);
-}
-
-function soltarMoeda(x, y){
-  const m = document.createElement('span');
-  m.className = 'moeda';
-  m.innerHTML = '<i></i>';
-  m.style.left = x + 'px'; m.style.top = y + 'px';
-  document.body.appendChild(m);
-  const g = document.createElement('span');
-  g.className = 'ganho';
-  g.textContent = '+1';
-  g.style.left = x + 'px'; g.style.top = y + 'px';
-  document.body.appendChild(g);
-  setTimeout(() => { m.remove(); g.remove(); }, 950);
-}
-
-let animandoCacos = false, ultimoQuadro = 0;
-function cairCacos(t){
-  const dt = ultimoQuadro ? Math.min((t - ultimoQuadro) / 1000, .04) : .016;
-  ultimoQuadro = t;
-  for(let i = cacos.length - 1; i >= 0; i--){
-    const c = cacos[i];
-    c.vy += 1900 * dt;
-    c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt;
-    c.el.style.transform = `translate(${c.x}px, ${c.y}px) rotate(${c.r}deg)`;
-    if(c.y > window.innerHeight + 200){ c.el.remove(); cacos.splice(i, 1); }
-  }
-  if(cacos.length){ requestAnimationFrame(cairCacos); }
-  else { animandoCacos = false; ultimoQuadro = 0; }
-}
-
-function logoZerado(){
-  $('zerouTotal').textContent = moedas;
-  $('logo').classList.add('is-zerado');
-  $('zerou').classList.add('is-on');
-  medir('logo_zerado', { moedas });
-}
-
-function remontarLogo(){
-  $('zerou').classList.remove('is-on');
-  $('logo').classList.remove('is-zerado');
-  letrasLogo.forEach((lt, i) => {
-    lt.querySelectorAll('.fatia').forEach((f, k) => {
-      setTimeout(() => f.classList.remove('is-gone'), i * 70 + k * 40);
-    });
-  });
-}
-
-$('heroCard').addEventListener('click', e => {
-  if(e.target.closest('a, button')) return;
-  if($('zerou').classList.contains('is-on')){ remontarLogo(); return; }
-  quebrar(e.clientX, e.clientY);
-});
 
 function abrirMenu(){
   $('mobileMenu').classList.add('is-open');
@@ -548,7 +401,7 @@ if(!semMovimento){ requestAnimationFrame(correrLuzes); requestAnimationFrame(pin
 window.addEventListener('resize', () => { montarRede(); prepararChuva(); });
 if(document.fonts) document.fonts.ready.then(montarRede);
 
-montarLetras($('marcaGigante'), false);
+montarLetras($('marcaGigante'));
 
 function encaixarMarca(){
   const el = $('marcaGigante');
