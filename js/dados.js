@@ -119,4 +119,3 @@ const PECAS = [{"c": "Elo Vendas","e": "Site","t": "lp","w": 560,"h": 3658,"s": 
 {"c": "Nord Investimentos","e": "Meta Ads","t": "img","w": 680,"h": 850,"s": "assets/portfolio/117-nord-investimentos-meta-ads.webp"},
 {"c": "ClickPlanos","e": "Vídeo","t": "vid","w": 720,"h": 406,"s": "assets/portfolio/118-clickplanos-video.mp4","p": "assets/portfolio/118-clickplanos-video-capa.jpg"},
 {"c": "Nord Investimentos","e": "Meta Ads","t": "img","w": 680,"h": 850,"s": "assets/portfolio/119-nord-investimentos-meta-ads.webp"}];
-const RECORTES = {"nord": "assets/galeria/recorte-nord.webp", "iox": "assets/galeria/recorte-iox.webp", "madera": "assets/galeria/recorte-madera.webp"};

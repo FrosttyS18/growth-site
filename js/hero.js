@@ -20,35 +20,36 @@
     return .2126 * r + .7152 * g + .0722 * b > .3 ? '#0f0f0f' : '#ffffff';
   };
 
-  const NOMES_CENA = ['Growth77 / Logo', 'Growth77 / Landing page', 'Growth77 / Criativo 4:5', 'Meta Ads / Campanha de leads', 'Google Analytics / Conversões'];
+  const NOMES_CENA = ['Growth77 / Logo', 'Growth77 / Landing page', 'Growth77 / Criativo 4:5', 'Meta Ads / Campanha de Leads', 'Google Analytics / Eventos'];
   const ROTEIRO = [
-    { dur: 7600, escura: true, tarefas: [
-      [250, 'Leo', 'desenhar', 'guiaH'], [900, 'Leo', 'desenhar', 'guiaV'],
-      [500, 'Design', 'desenhar', 'logo', 1500],
-      [2400, 'Thainan', 'mostrar', 'paleta'],
-      [3200, 'Wesley', 'clicar', 'swVerde', 'is-cor'],
-      [3800, 'Copy', 'digitar', 'tag']
+    { dur: 5000, escura: true, tarefas: [
+      [0, 'Wesley', 'desenhar', 'guiaH', 450],
+      [150, 'Design', 'desenhar', 'lg', 420], [300, 'Leo', 'desenhar', 'lr', 420], [450, 'Ivan', 'desenhar', 'lo', 420],
+      [600, 'Thainan', 'desenhar', 'lw', 480], [750, 'Priscilla', 'desenhar', 'lt', 420], [900, 'Fabrizio', 'desenhar', 'lh', 420],
+      [1050, 'Creator', 'desenhar', 'l7a', 420], [1200, 'Meta', 'desenhar', 'l7b', 420],
+      [2000, 'Design', 'mostrar', 'paleta'], [2500, 'Wesley', 'clicar', 'swVerde', 'is-cor'], [2700, 'Copy', 'digitar', 'tag']
     ]},
-    { dur: 7800, tarefas: [
-      [200, 'Leo', 'desenhar', 'barra', 700], [700, 'Ivan', 'desenhar', 'nav', 900],
-      [1300, 'Copy', 'digitar', 'titulo'], [1100, 'Creator', 'desenhar', 'img', 1200],
-      [2300, 'Thainan', 'desenhar', 'texto', 800], [3300, 'Design', 'desenhar', 'cta', 700],
-      [3700, 'Priscilla', 'desenhar', 'cards', 1000], [5200, 'Wesley', 'clicar', 'cta']
+    { dur: 5200, tarefas: [
+      [100, 'Leo', 'desenhar', 'barra', 450], [400, 'Ivan', 'desenhar', 'nav', 550],
+      [800, 'Copy', 'digitar', 'titulo'], [700, 'Creator', 'desenhar', 'img', 700],
+      [1500, 'Thainan', 'desenhar', 'texto', 500], [2100, 'Design', 'desenhar', 'cta', 450],
+      [2400, 'Priscilla', 'desenhar', 'cards', 600], [3400, 'Wesley', 'clicar', 'cta']
     ]},
-    { dur: 7400, tarefas: [
-      [200, 'Creator', 'desenhar', 'peca', 1300], [600, 'Priscilla', 'mostrar', 'painel'],
-      [1700, 'Copy', 'digitar', 'cliente'], [2500, 'Design', 'clicar', 'feed'],
-      [3100, 'Meta', 'digitar', 'canal'], [4600, 'Creator', 'clicar', 'exportar', null, 'toastCr']
+    { dur: 5000, tarefas: [
+      [100, 'Creator', 'desenhar', 'peca', 800], [400, 'Priscilla', 'mostrar', 'painel'],
+      [1100, 'Copy', 'digitar', 'cliente'], [1700, 'Design', 'clicar', 'feed'],
+      [2100, 'Meta', 'digitar', 'canal'], [3100, 'Creator', 'clicar', 'exportar', null, 'toastCr']
     ]},
-    { dur: 7800, tarefas: [
-      [400, 'Meta', 'clicar', 'leads'], [1100, 'Ivan', 'digitar', 'orc'],
-      [1500, 'Priscilla', 'digitar', 'pub'], [2300, 'Creator', 'desenhar', 'cri', 900],
-      [3000, 'Thainan', 'desenhar', 'resumo', 800], [4700, 'Meta', 'clicar', 'publicar', null, 'status']
+    { dur: 6000, tarefas: [
+      [200, 'Copy', 'digitar', 'nome'], [500, 'Meta', 'clicar', 'formulario'],
+      [900, 'Ivan', 'digitar', 'orc'], [1300, 'Priscilla', 'digitar', 'loc'],
+      [2000, 'Leo', 'desenhar', 'medidor', 700], [2600, 'Thainan', 'desenhar', 'estim', 700],
+      [3800, 'Meta', 'clicar', 'publicar', null, 'status']
     ]},
-    { dur: 7800, tarefas: [
-      [500, 'Fabrizio', 'digitar', 'evento'], [1400, 'Leo', 'desenhar', 'graf', 1300],
-      [2400, 'Fabrizio', 'clicar', 'tgLead'], [2900, 'Ivan', 'desenhar', 'kpis', 900],
-      [4400, 'Wesley', 'clicar', 'salvar', null, 'toastGa']
+    { dur: 6000, tarefas: [
+      [300, 'Fabrizio', 'clicar', 'criar', null, 'linhaNova'], [900, 'Fabrizio', 'digitar', 'evento'],
+      [1000, 'Leo', 'desenhar', 'barras', 800], [1700, 'Ivan', 'desenhar', 'top', 600],
+      [2500, 'Fabrizio', 'clicar', 'tgLead', null, 'toastGa']
     ]}
   ];
 
@@ -96,7 +97,7 @@
   async function mover(c, x, y, s, dur){
     pararCursor(c);
     const dist = Math.hypot(x - c.x, y - c.y);
-    const d = dur || Math.max(380, Math.min(1100, dist * 1.5));
+    const d = dur || Math.max(260, Math.min(750, dist * 1.05));
     const a = c.el.animate([{ transform: `translate(${c.x}px,${c.y}px)` }, { transform: `translate(${x}px,${y}px)` }], { duration: d, easing: 'cubic-bezier(.45,.05,.25,1)', fill: 'forwards' });
     c.anim = a;
     try { await a.finished; } catch(e){ return; }
@@ -123,7 +124,7 @@
   }
   function soltarCaixa(s, ms){ timers.push(setTimeout(() => { s.style.opacity = 0; timers.push(setTimeout(() => s.remove(), 400)); }, ms)); }
 
-  async function desenhar(c, el, s, dur = 900){
+  async function desenhar(c, el, s, dur = 600){
     const r = retangulo(el);
     await mover(c, r.x, r.y, s);
     if(!vivo(s)) return;
@@ -155,7 +156,7 @@
     for(let i = 1; i <= texto.length; i++){
       if(!vivo(s)) return;
       el.innerHTML = texto.slice(0, i) + caret;
-      await esperar(38 + Math.random() * 40);
+      await esperar(22 + Math.random() * 28);
     }
     el.textContent = texto;
   }
@@ -168,7 +169,7 @@
     if(classeCena) el.closest('.cena').classList.add(classeCena);
     await esperar(170);
     c.el.classList.remove('is-click');
-    if(el.matches('.lp-cta,.cr-exportar,.mt-publicar,.ga-salvar')) timers.push(setTimeout(() => el.classList.remove('is-on'), 260));
+    if(el.matches('.lp-cta,.cr-exportar,.ma-publicar,.ga-criar')) timers.push(setTimeout(() => el.classList.remove('is-on'), 260));
     if(revelar){
       const extra = alvo(el.closest('.cena'), revelar);
       extra.classList.add('is-vis');
@@ -180,7 +181,7 @@
     const [, nome, acao, k, a, b] = t;
     const c = cursores[nome], el = alvo(cena, k);
     c.ocupado = true;
-    if(acao === 'desenhar') await desenhar(c, el, s, a || 900);
+    if(acao === 'desenhar') await desenhar(c, el, s, a || 600);
     if(acao === 'mostrar') await mostrar(c, el, s);
     if(acao === 'digitar') await digitar(c, el, s);
     if(acao === 'clicar') await clicar(c, el, s, a, b);
@@ -201,9 +202,7 @@
 
   function limparCena(cena){
     cena.classList.remove('is-cor');
-    cena.querySelectorAll('.is-vis,.is-on').forEach(e => { if(!e.matches('.mt-lado li,.ga-linha .tg.is-on:not([data-k])')) e.classList.remove('is-vis', 'is-on'); });
-    cena.querySelector('.ga-linha .tg')?.classList.add('is-on');
-    cena.querySelector('.mt-lado li')?.classList.add('is-on');
+    cena.querySelectorAll('[data-k]').forEach(e => e.classList.remove('is-vis', 'is-on'));
     cena.querySelectorAll('[data-txt]').forEach(e => e.textContent = '');
   }
   function completarCena(i){
@@ -211,7 +210,7 @@
     ROTEIRO[i].tarefas.forEach(([, , acao, k, a, b]) => {
       const el = alvo(cena, k);
       if(acao === 'digitar') el.textContent = el.dataset.txt;
-      if(acao === 'clicar'){ if(!el.matches('.lp-cta,.cr-exportar,.mt-publicar,.ga-salvar')) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b) alvo(cena, b).classList.add('is-vis'); }
+      if(acao === 'clicar'){ if(!el.matches('.lp-cta,.cr-exportar,.ma-publicar,.ga-criar')) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b) alvo(cena, b).classList.add('is-vis'); }
       el.classList.add('is-vis');
     });
   }

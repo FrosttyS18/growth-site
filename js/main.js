@@ -1,8 +1,4 @@
 const $ = id => document.getElementById(id);
-const limitar = (v, min, max) => Math.min(Math.max(v, min), max);
-const misturar = (a, b, t) => a + (b - a) * t;
-const suavizar = t => 1 - Math.pow(1 - t, 3);
-const faixa = (p, a, b) => limitar((p - a) / (b - a), 0, 1);
 const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function medir(evento, dados){ window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event:evento }, dados || {})); }
 
@@ -36,102 +32,6 @@ $('closeMenu').addEventListener('click', fecharMenu);
 $('mobileMenu').querySelectorAll('a').forEach(a => a.addEventListener('click', fecharMenu));
 document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenu(); });
 
-const orbitas = [...document.querySelectorAll('.orbit')];
-function posicionarOrbitas(){
-  const mobile = window.innerWidth <= 768;
-  orbitas.forEach(o => {
-    const [rw, rh] = o.dataset.r.split('/').map(Number);
-    const w = (mobile ? o.dataset.w * 1.8 : +o.dataset.w) * window.innerWidth / 100;
-    const h = w * rh / rw;
-    Object.assign(o.style, { width:w + 'px', height:h + 'px',
-      left:(o.dataset.x * window.innerWidth / 100 - w / 2) + 'px',
-      top:(o.dataset.y * window.innerHeight / 100 - h / 2) + 'px' });
-  });
-}
-
-const tiles = [...document.querySelectorAll('.tile')];
-let alvo = { w:0, h:0, x:0, y:0 };
-function montarGrade(){
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const mobile = vw <= 768;
-  const gap = mobile ? 10 : 18;
-  const w = mobile ? vw * .78 : vw * .56;
-  const h = mobile ? vh * .42 : vh * .62;
-  const x = (vw - w) / 2, y = (vh - h) / 2;
-  alvo = { w, h, x, y };
-  const lado = mobile ? vw * .5 : vw * .2;
-  const meia = (w - gap) / 2;
-  const alturaFaixa = vh * .34;
-  const pos = {
-    'topo-esq': [x, y - gap - alturaFaixa, meia, alturaFaixa],
-    'topo-dir': [x + meia + gap, y - gap - alturaFaixa, meia, alturaFaixa],
-    'base-esq': [x, y + h + gap, meia, alturaFaixa],
-    'base-dir': [x + meia + gap, y + h + gap, meia, alturaFaixa],
-    'esq-1':    [x - gap - lado, y - vh * .18, lado, vh * .44],
-    'esq-2':    [x - gap - lado, y - vh * .18 + vh * .44 + gap, lado, vh * .5],
-    'dir-1':    [x + w + gap, y - vh * .08, lado, vh * .38],
-    'dir-2':    [x + w + gap, y - vh * .08 + vh * .38 + gap, lado, vh * .46]
-  };
-  tiles.forEach(t => {
-    const [tx, ty, tw, th] = pos[t.dataset.slot];
-    Object.assign(t.style, { left:tx + 'px', top:ty + 'px', width:tw + 'px', height:th + 'px' });
-  });
-}
-
-const cena = $('metodo');
-const l1 = $('fraseL1');
-const midia = $('midia');
-const palEsq = $('palEsq');
-const palDir = $('palDir');
-const copia = $('sceneCopy');
-const grade = $('grade');
-const frase = document.querySelector('.frase');
-
-function atualizarCena(){
-  const vh = window.innerHeight, vw = window.innerWidth;
-  const topo = cena.getBoundingClientRect().top;
-  const p = limitar(-topo / (cena.offsetHeight - vh), 0, 1);
-
-  const a = suavizar(faixa(p, 0, .14));
-  orbitas.forEach(o => {
-    const dx = (o.dataset.x - 50) / 50, dy = (o.dataset.y - 50) / 50;
-    o.style.transform = `translate(${dx * a * vw * .18}px, ${dy * a * vh * .18}px) scale(${misturar(1, .85, a)})`;
-    o.style.opacity = 1 - a;
-  });
-  l1.style.opacity = misturar(1, .28, a) * (1 - faixa(p, .14, .24));
-  l1.style.transform = `translateY(${-faixa(p, .14, .24) * 40}px)`;
-
-  const c = suavizar(faixa(p, .2, .62));
-  const tamFonte = parseFloat(getComputedStyle(palEsq).fontSize);
-  const w = misturar(0, alvo.w, c);
-  const h = misturar(tamFonte * .8, alvo.h, c);
-  midia.style.width = w + 'px';
-  midia.style.height = h + 'px';
-  midia.style.borderRadius = misturar(6, 18, c) + 'px';
-  midia.style.marginLeft = midia.style.marginRight = misturar(tamFonte * .22, tamFonte * .6, c) + 'px';
-  const fuga = suavizar(faixa(p, .45, .64)) * vw * .4;
-  palEsq.style.transform = `translateX(${-fuga}px)`;
-  palDir.style.transform = `translateX(${fuga}px)`;
-  palEsq.style.opacity = palDir.style.opacity = 1 - faixa(p, .56, .64);
-  frase.style.transform = `translateY(${misturar(0, -(l1.offsetHeight / 2), faixa(p, .14, .3))}px)`;
-
-  const g = suavizar(faixa(p, .58, .78));
-  tiles.forEach((t, i) => {
-    const atraso = faixa(g, i * .06, i * .06 + .5);
-    t.style.opacity = atraso;
-    t.style.transform = `scale(${misturar(.88, 1, atraso)}) translateY(${misturar(30, 0, atraso)}px)`;
-  });
-
-  const tx = suavizar(faixa(p, .74, .88));
-  copia.style.opacity = tx;
-  copia.style.transform = `translateY(${misturar(30, 0, tx)}px)`;
-  copia.classList.toggle('is-on', tx > .5);
-
-  const saida = faixa(p, .86, 1) * -vh * .35;
-  grade.style.transform = `translateY(${saida}px)`;
-  midia.style.translate = `0 ${saida}px`;
-}
-
 function atualizarInterface(){
   const passouHero = window.scrollY > $('hero').offsetHeight - 80;
   $('siteHeader').classList.toggle('is-solid', window.scrollY > 20);
@@ -143,32 +43,13 @@ function aoRolar(){
   if(agendado) return;
   agendado = true;
   requestAnimationFrame(() => {
-    if(!semMovimento) atualizarCena();
     atualizarInterface();
     agendado = false;
   });
 }
 
-function igualarPalavras(){
-  palEsq.style.width = palDir.style.width = 'auto';
-  const maior = Math.max(palEsq.offsetWidth, palDir.offsetWidth);
-  palEsq.style.width = palDir.style.width = maior + 'px';
-  palEsq.style.textAlign = 'right';
-}
-function recalcular(){ igualarPalavras(); posicionarOrbitas(); montarGrade(); aoRolar(); }
 window.addEventListener('scroll', aoRolar, { passive:true });
-window.addEventListener('resize', recalcular);
-recalcular();
-if(document.fonts) document.fonts.ready.then(recalcular);
-
-if(semMovimento){
-  orbitas.forEach(o => o.style.opacity = 0);
-  l1.style.opacity = 0;
-  palEsq.style.opacity = palDir.style.opacity = 0;
-  Object.assign(midia.style, { width:alvo.w + 'px', height:alvo.h + 'px' });
-  tiles.forEach(t => t.style.opacity = 1);
-  copia.style.opacity = 1; copia.style.transform = 'none';
-}
+aoRolar();
 
 const esteiras = [...document.querySelectorAll('[data-esteira]')].map(el => {
   const trilho = el.querySelector('.trilho');
@@ -452,14 +333,6 @@ document.querySelectorAll('.peca-lp').forEach(fig => {
   fig.addEventListener('mouseenter', () => rolarLp(fig, true));
   fig.addEventListener('mouseleave', () => rolarLp(fig, false));
   fig.addEventListener('click', () => rolarLp(fig, !fig.classList.contains('is-rolando')));
-});
-
-document.querySelectorAll('.real').forEach(el => {
-  if(el.dataset.recorte){ el.innerHTML = `<img src="${RECORTES[el.dataset.recorte]}" alt="${el.getAttribute('aria-label') || ''}">`; return; }
-  const p = PECAS[el.dataset.peca];
-  el.innerHTML = p.t === 'vid'
-    ? `<video src="${p.s}" poster="${p.p}" muted loop playsinline autoplay aria-label="${el.getAttribute('aria-label') || p.c}"></video>`
-    : `<img src="${p.s}" alt="${el.getAttribute('aria-label') || 'Peça ' + p.e + ', ' + p.c}">`;
 });
 
 const linksMenu = [...document.querySelectorAll('.main-nav a')];
