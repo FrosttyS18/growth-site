@@ -19,6 +19,7 @@
     return .2126 * r + .7152 * g + .0722 * b > .3 ? '#0f0f0f' : '#ffffff';
   };
 
+  const SOLTA = '.lp-cta,.cr-exportar,.ma-publicar,.ga-criar,.ga-ok,.ed-publicar';
   const NOMES_CENA = ['Growth77 / Logo', 'Growth77 / Landing page', 'Growth77 / Criativo 4:5', 'Meta Ads / Campanha de Leads', 'Google Analytics / Eventos'];
   const ROTEIRO = [
     { dur: 5000, escura: true, tarefas: [
@@ -28,27 +29,29 @@
       [1050, 'Creator', 'desenhar', 'l7a', 420], [1200, 'Meta', 'desenhar', 'l7b', 420],
       [2000, 'Design', 'mostrar', 'paleta'], [2500, 'Wesley', 'clicar', 'swVerde', 'is-cor'], [2700, 'Copy', 'digitar', 'tag']
     ]},
-    { dur: 5200, tarefas: [
-      [100, 'Leo', 'desenhar', 'barra', 450], [400, 'Ivan', 'desenhar', 'nav', 550],
-      [800, 'Copy', 'digitar', 'titulo'], [700, 'Creator', 'desenhar', 'img', 700],
-      [1500, 'Thainan', 'desenhar', 'texto', 500], [2100, 'Design', 'desenhar', 'cta', 450],
-      [2400, 'Priscilla', 'desenhar', 'cards', 600], [3400, 'Wesley', 'clicar', 'cta']
+    { dur: 6400, tarefas: [
+      [100, 'Leo', 'desenhar', 'nav', 450], [500, 'Copy', 'digitar', 'titulo'], [500, 'Creator', 'desenhar', 'img', 700],
+      [1400, 'Thainan', 'desenhar', 'texto', 450], [1900, 'Design', 'desenhar', 'cta', 400], [2300, 'Priscilla', 'desenhar', 'cards', 550],
+      [2700, 'Design', 'clicar', 'corVerde', 'is-verde'], [2900, 'Fabrizio', 'desenhar', 'logos', 450],
+      [3600, 'Ivan', 'clicar', 'bpCel', 'is-cel'], [5000, 'Wesley', 'clicar', 'publicarLp', null, 'toastLp']
     ]},
     { dur: 5000, tarefas: [
       [100, 'Creator', 'desenhar', 'peca', 800], [400, 'Priscilla', 'mostrar', 'painel'],
       [1100, 'Copy', 'digitar', 'cliente'], [1700, 'Design', 'clicar', 'feed'],
       [2100, 'Meta', 'digitar', 'canal'], [3100, 'Creator', 'clicar', 'exportar', null, 'toastCr']
     ]},
-    { dur: 6000, tarefas: [
-      [200, 'Copy', 'digitar', 'nome'], [500, 'Meta', 'clicar', 'formulario'],
-      [900, 'Ivan', 'digitar', 'orc'], [1300, 'Priscilla', 'digitar', 'loc'],
-      [2000, 'Leo', 'desenhar', 'medidor', 700], [2600, 'Thainan', 'desenhar', 'estim', 700],
-      [3800, 'Meta', 'clicar', 'publicar', null, 'status']
+    { dur: 7200, tarefas: [
+      [200, 'Copy', 'digitar', 'nome'], [600, 'Meta', 'clicar', 'formulario'],
+      [1000, 'Ivan', 'escolher', 'meta', 'metaOpt'], [1300, 'Leo', 'digitar', 'orc'],
+      [1700, 'Priscilla', 'digitar', 'loc'], [2300, 'Priscilla', 'escolher', 'loc', 'locOpt', 'is-loc'],
+      [3100, 'Leo', 'arrastar', 'idMin', 30, 'is-idade'], [3100, 'Thainan', 'arrastar', 'idMax', 115, 'is-idade'],
+      [3600, 'Design', 'desenhar', 'medidor', 600], [4000, 'Creator', 'desenhar', 'estim', 600],
+      [5200, 'Meta', 'clicar', 'publicar', 'is-pub', 'status']
     ]},
-    { dur: 6000, tarefas: [
-      [300, 'Fabrizio', 'clicar', 'criar', null, 'linhaNova'], [900, 'Fabrizio', 'digitar', 'evento'],
-      [1000, 'Leo', 'desenhar', 'barras', 800], [1700, 'Ivan', 'desenhar', 'top', 600],
-      [2500, 'Fabrizio', 'clicar', 'tgLead', null, 'toastGa']
+    { dur: 6600, tarefas: [
+      [300, 'Fabrizio', 'clicar', 'criar', 'is-painel'], [1000, 'Fabrizio', 'digitar', 'evento'],
+      [1800, 'Ivan', 'digitar', 'valor'], [2700, 'Leo', 'clicar', 'tgLead'],
+      [3400, 'Fabrizio', 'clicar', 'criarOk', 'is-criado', 'linhaNova']
     ]}
   ];
 
@@ -90,30 +93,14 @@
     palcoIn.style.setProperty('--inv', Math.max(.9, Math.min(1 / s, 1.5)));
   }
 
-  async function virarCelular(s){
-    const c = cursores.Ivan;
-    c.ocupado = true;
-    const borda = 40 + 880, meio = 40 + 260;
-    await mover(c, borda - 2, meio, s);
+  function virarCelular(s){
     if(!vivo(s)) return;
-    c.el.classList.add('is-click');
-    const medida = document.createElement('em');
-    medida.className = 'medida';
-    medida.textContent = '390 px';
-    prancheta.after(medida);
     palco.classList.add('is-morph');
     prancheta.classList.add('is-celular');
     ajustar();
-    const dir = 40 + (880 + CEL.w) / 2;
-    medida.animate([{ opacity: 0 }, { opacity: 1, offset: .2 }, { opacity: 1, offset: .8 }, { opacity: 0 }], { duration: 1400, fill: 'forwards' });
-    await mover(c, dir - 2, meio, s, 900);
-    c.el.classList.remove('is-click');
-    timers.push(setTimeout(() => medida.remove(), 1400));
-    c.ocupado = false;
   }
 
   function voltarDesktop(){
-    palcoIn.querySelectorAll('.medida').forEach(m => m.remove());
     if(!prancheta.classList.contains('is-celular')) return;
     palco.classList.remove('is-morph');
     prancheta.classList.remove('is-celular');
@@ -127,11 +114,12 @@
   function pararCursor(c){
     if(c.anim){ const p = posicao(c); c.anim.cancel(); c.anim = null; c.x = p.x; c.y = p.y; c.el.style.transform = `translate(${c.x}px,${c.y}px)`; }
   }
-  async function mover(c, x, y, s, dur){
+  const ARRASTE = 'cubic-bezier(.4,0,.2,1)';
+  async function mover(c, x, y, s, dur, curva){
     pararCursor(c);
     const dist = Math.hypot(x - c.x, y - c.y);
     const d = dur || Math.max(260, Math.min(750, dist * 1.05));
-    const a = c.el.animate([{ transform: `translate(${c.x}px,${c.y}px)` }, { transform: `translate(${x}px,${y}px)` }], { duration: d, easing: 'cubic-bezier(.45,.05,.25,1)', fill: 'forwards' });
+    const a = c.el.animate([{ transform: `translate(${c.x}px,${c.y}px)` }, { transform: `translate(${x}px,${y}px)` }], { duration: d, easing: curva || 'cubic-bezier(.45,.05,.25,1)', fill: 'forwards' });
     c.anim = a;
     try { await a.finished; } catch(e){ return; }
     if(c.anim !== a) return;
@@ -164,9 +152,9 @@
     const sel = caixa(c, r);
     el.classList.add('is-vis');
     const ini = { width: '0px', height: '0px' }, fim = { width: r.w + 'px', height: r.h + 'px' };
-    sel.animate([ini, fim], { duration: dur, easing: 'cubic-bezier(.4,0,.2,1)' });
-    el.animate([{ clipPath: 'inset(0 100% 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: dur, easing: 'cubic-bezier(.4,0,.2,1)' });
-    await mover(c, r.x + r.w, r.y + r.h, s, dur);
+    sel.animate([ini, fim], { duration: dur, easing: ARRASTE });
+    el.animate([{ clipPath: 'inset(0 100% 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: dur, easing: ARRASTE });
+    await mover(c, r.x + r.w, r.y + r.h, s, dur, ARRASTE);
     soltarCaixa(sel, 500);
   }
   async function mostrar(c, el, s){
@@ -202,12 +190,61 @@
     if(classeCena) el.closest('.cena').classList.add(classeCena);
     await esperar(170);
     c.el.classList.remove('is-click');
-    if(el.matches('.lp-cta,.cr-exportar,.ma-publicar,.ga-criar')) timers.push(setTimeout(() => el.classList.remove('is-on'), 260));
+    if(el.matches(SOLTA)) timers.push(setTimeout(() => el.classList.remove('is-on'), 260));
     if(revelar){
       const extra = alvo(el.closest('.cena'), revelar);
       extra.classList.add('is-vis');
       extra.animate([{ opacity: 0, translate: '0 10px' }, { opacity: 1, translate: '0 0' }], { duration: 320, easing: 'ease-out' });
     }
+  }
+
+  async function escolher(c, el, s, chave, classeCena){
+    const cena = el.closest('.cena');
+    const r = retangulo(el);
+    await mover(c, r.x + r.w * .5, r.y + r.h * .5, s);
+    if(!vivo(s)) return;
+    c.el.classList.add('is-click');
+    el.classList.add('is-aberto');
+    await esperar(170);
+    c.el.classList.remove('is-click');
+    await esperar(380);
+    if(!vivo(s)) return;
+    const op = alvo(cena, chave);
+    const ro = retangulo(op);
+    await mover(c, ro.x + Math.min(60, ro.w * .4), ro.y + ro.h * .5, s, 420);
+    if(!vivo(s)) return;
+    op.classList.add('is-on');
+    c.el.classList.add('is-click');
+    await esperar(200);
+    c.el.classList.remove('is-click');
+    aplicarEscolha(el, op, cena, classeCena);
+  }
+  function aplicarEscolha(el, op, cena, classeCena){
+    const val = el.querySelector('.val');
+    if(val) val.textContent = op.firstChild.textContent;
+    el.classList.remove('is-aberto');
+    if(classeCena) cena.classList.add(classeCena);
+  }
+
+  async function arrastar(c, el, s, destino, classeCena){
+    const r = retangulo(el);
+    await mover(c, r.x + r.w * .5, r.y + r.h * .5, s);
+    if(!vivo(s)) return;
+    c.el.classList.add('is-click');
+    const ini = parseFloat(getComputedStyle(el).left);
+    const dx = destino - ini;
+    el.animate([{ left: ini + 'px' }, { left: destino + 'px' }], { duration: 650, easing: ARRASTE });
+    el.style.left = destino + 'px';
+    if(classeCena) el.closest('.cena').classList.add(classeCena);
+    await mover(c, r.x + r.w * .5 + dx, r.y + r.h * .5, s, 650, ARRASTE);
+    c.el.classList.remove('is-click');
+  }
+
+  function acenderCamada(cena, k){
+    const cam = cena.querySelector(`[data-cam="${k}"]`);
+    if(!cam) return;
+    cena.querySelectorAll('[data-cam].is-sel').forEach(x => x.classList.remove('is-sel'));
+    cam.classList.add('is-vis', 'is-sel');
   }
 
   async function executar(t, cena, s){
@@ -218,6 +255,9 @@
     if(acao === 'mostrar') await mostrar(c, el, s);
     if(acao === 'digitar') await digitar(c, el, s);
     if(acao === 'clicar') await clicar(c, el, s, a, b);
+    if(acao === 'escolher') await escolher(c, el, s, a, b);
+    if(acao === 'arrastar') await arrastar(c, el, s, a, b);
+    if(vivo(s)) acenderCamada(cena, k);
     c.ocupado = false;
   }
 
@@ -234,17 +274,23 @@
   }
 
   function limparCena(cena){
-    cena.classList.remove('is-cor');
-    cena.querySelectorAll('[data-k]').forEach(e => e.classList.remove('is-vis', 'is-on'));
+    cena.className = cena.className.split(' ').filter(c => c === 'cena' || c.startsWith('cena-')).join(' ');
+    cena.querySelectorAll('[data-k],[data-cam]').forEach(e => e.classList.remove('is-vis', 'is-on', 'is-aberto', 'is-sel'));
     cena.querySelectorAll('[data-txt]').forEach(e => e.textContent = '');
+    cena.querySelectorAll('[data-ini]').forEach(e => e.textContent = e.dataset.ini);
+    cena.querySelectorAll('[data-x0]').forEach(e => e.style.left = '');
   }
   function completarCena(i){
     const cena = cenas[i];
     ROTEIRO[i].tarefas.forEach(([, , acao, k, a, b]) => {
       const el = alvo(cena, k);
       if(acao === 'digitar') el.textContent = el.dataset.txt;
-      if(acao === 'clicar'){ if(!el.matches('.lp-cta,.cr-exportar,.ma-publicar,.ga-criar')) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b) alvo(cena, b).classList.add('is-vis'); }
+      if(acao === 'clicar'){ if(!el.matches(SOLTA)) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b) alvo(cena, b).classList.add('is-vis'); }
+      if(acao === 'escolher'){ const op = alvo(cena, a); op.classList.add('is-on'); aplicarEscolha(el, op, cena, b); }
+      if(acao === 'arrastar'){ el.style.left = a + 'px'; if(b) cena.classList.add(b); }
       el.classList.add('is-vis');
+      const cam = cena.querySelector(`[data-cam="${k}"]`);
+      if(cam) cam.classList.add('is-vis');
     });
   }
 
@@ -285,16 +331,17 @@
     mostrarCena(i);
     const r = ROTEIRO[i];
     const celular = i === 1 && compacto();
-    const dur = r.dur + (celular ? 2600 : 0);
+    const dur = r.dur + (celular ? 1200 : 0);
     marcarEtapa(i, dur);
     Object.values(cursores).forEach(c => vagar(c, s));
     r.tarefas.forEach(t => {
+      if(celular && t[3] === 'publicarLp') return;
       timers.push(setTimeout(() => {
         const c = cursores[t[1]];
         c.fila = c.fila.then(() => vivo(s) ? executar(t, cenas[i], s) : null);
       }, t[0]));
     });
-    if(celular) timers.push(setTimeout(() => { const c = cursores.Ivan; c.fila = c.fila.then(() => vivo(s) ? virarCelular(s) : null); }, 3900));
+    if(celular) timers.push(setTimeout(() => { const c = cursores.Ivan; c.fila = c.fila.then(() => vivo(s) ? esperar(500).then(() => virarCelular(s)) : null); }, 3600));
     await esperar(dur);
     if(!vivo(s)) return;
     rodar((i + 1) % ROTEIRO.length);
