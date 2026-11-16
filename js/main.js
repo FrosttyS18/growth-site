@@ -209,7 +209,7 @@ function pingarChuva(t){
       if(Math.random() < .15) c.digs[Math.floor(Math.random() * c.digs.length)] = Math.floor(Math.random() * 10);
       c.digs.forEach((d, k) => {
         const y = k * 18 + c.y;
-        ctxChuva.fillStyle = `rgba(15,15,15,${.06 + .08 * Math.sin((k + c.x) * .7) ** 2})`;
+        ctxChuva.fillStyle = `rgba(244,243,234,${.05 + .08 * Math.sin((k + c.x) * .7) ** 2})`;
         ctxChuva.fillText(d, c.x, y);
       });
     });

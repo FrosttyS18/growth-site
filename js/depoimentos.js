@@ -1,127 +1,122 @@
 (() => {
-  const raiz = document.getElementById('stories');
-  const palco = document.getElementById('storiesPalco');
-  const cards = [...palco.querySelectorAll('.story')];
-  const nomes = document.getElementById('stNomes');
+  const janela = document.getElementById('depoJanela');
+  const trilho = document.getElementById('depoTrilho');
+  if(!janela || !trilho) return;
   const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const N = cards.length;
-  const TROCA = 6000;
+  const originais = [...trilho.querySelectorAll('.depo-slide')];
+  const N = originais.length;
 
-  let ativo = 0, pausado = reduzir, tocando = false, visivel = false, inicio = 0, duracao = TROCA, raf = 0, decorrido = 0;
+  const clonar = s => {
+    const c = s.cloneNode(true);
+    c.classList.add('is-clone');
+    c.setAttribute('aria-hidden', 'true');
+    c.inert = true;
+    return c;
+  };
+  trilho.prepend(clonar(originais[N - 1]));
+  originais.forEach(s => trilho.append(clonar(s)));
+  const slides = [...trilho.children];
 
-  const segundos = d => { const [m, s] = d.split(':').map(Number); return (m * 60 + s) * 1000; };
+  let atual = 1, visivel = false, comSom = false, tocando = !reduzir, travado = false;
 
-  cards.forEach((c, i) => {
-    c.querySelector('.st-barras').innerHTML = cards.map(() => '<i><b></b></i>').join('');
-    const li = document.createElement('li');
-    li.innerHTML = `<button type="button">${c.dataset.cliente}</button>`;
-    li.querySelector('button').addEventListener('click', () => ir(i));
-    nomes.appendChild(li);
-    c.addEventListener('click', e => {
-      if(e.target.closest('.st-play')) return;
-      if(i !== ativo) ir(i);
-    });
-    c.querySelector('.st-play').addEventListener('click', () => {
-      if(i !== ativo){ ir(i); return; }
-      tocando ? pararVideo() : tocarVideo();
-    });
-  });
-
-  function posicionar(){
+  function deslocar(semAnimacao){
+    const w = slides[0].offsetWidth;
     const compacto = window.innerWidth <= 768;
-    cards.forEach((c, i) => {
-      let d = i - ativo;
-      if(d > N / 2) d -= N;
-      if(d < -N / 2) d += N;
-      const a = Math.abs(d);
-      const x = d * (compacto ? 78 : 68);
-      const esc = a === 0 ? 1 : Math.max(.62, 1 - a * .16);
-      c.style.transform = `translateX(${x}%) perspective(1400px) rotateY(${(-d * 16).toFixed(1)}deg) scale(${esc.toFixed(3)})`;
-      c.style.zIndex = 20 - a;
-      c.style.opacity = a > (compacto ? 1 : 2) ? 0 : a === 0 ? 1 : .42 - (a - 1) * .22;
-      c.classList.toggle('is-ativo', a === 0);
-      c.setAttribute('aria-hidden', a === 0 ? 'false' : 'true');
-      c.querySelectorAll('button').forEach(b => b.tabIndex = a === 0 ? 0 : -1);
-      c.querySelectorAll('.st-barras i').forEach((seg, k) => seg.classList.toggle('is-feito', k < ativo));
+    const base = compacto ? (janela.clientWidth - w) / 2 : 0;
+    trilho.classList.toggle('sem-transicao', !!semAnimacao);
+    trilho.style.transform = `translateX(${(base - atual * w).toFixed(1)}px)`;
+    if(semAnimacao){ void trilho.offsetWidth; trilho.classList.remove('sem-transicao'); }
+  }
+
+  function video(slide){
+    const src = slide.dataset.video;
+    if(!src) return null;
+    let v = slide.querySelector('.depo-video');
+    if(!v){
+      v = document.createElement('video');
+      v.className = 'depo-video';
+      v.playsInline = true;
+      v.preload = 'metadata';
+      v.src = src;
+      v.addEventListener('playing', () => slide.classList.remove('is-carregando'));
+      v.addEventListener('waiting', () => slide.classList.add('is-carregando'));
+      v.addEventListener('ended', () => { if(slide.classList.contains('is-ativo')) ir(atual + 1); });
+      slide.querySelector('.depo-poster').after(v);
+    }
+    return v;
+  }
+
+  function aplicar(){
+    slides.forEach((s, i) => {
+      const ativo = i === atual;
+      s.classList.toggle('is-ativo', ativo);
+      s.classList.toggle('com-som', ativo && comSom);
+      s.querySelectorAll('button').forEach(b => b.tabIndex = ativo ? 0 : -1);
+      if(!ativo){
+        s.classList.remove('is-tocando', 'is-carregando');
+        const v = s.querySelector('.depo-video');
+        if(v){ v.pause(); v.currentTime = 0; }
+      }
     });
-    [...nomes.children].forEach((li, k) => {
-      const b = li.firstChild;
-      if(k === ativo) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
-    });
-  }
-
-  function barraAtual(){ return cards[ativo].querySelectorAll('.st-barras b')[ativo]; }
-
-  function limparBarras(){
-    cards.forEach(c => c.querySelectorAll('.st-barras b').forEach(b => b.style.width = ''));
-  }
-
-  function laco(t){
-    if(!inicio) inicio = t - decorrido;
-    decorrido = t - inicio;
-    const p = Math.min(1, decorrido / duracao);
-    barraAtual().style.width = (p * 100) + '%';
-    if(p >= 1){ proximo(); return; }
-    raf = requestAnimationFrame(laco);
-  }
-  function rodar(){
-    cancelAnimationFrame(raf);
-    if((pausado && !tocando) || !visivel) return;
-    inicio = 0;
-    raf = requestAnimationFrame(laco);
+    const s = slides[atual];
+    const deveTocar = tocando && visivel;
+    s.classList.toggle('is-tocando', deveTocar);
+    const botao = s.querySelector('.depo-tocar');
+    botao.setAttribute('aria-label', deveTocar ? 'Pausar depoimento' : 'Reproduzir depoimento');
+    s.querySelector('.depo-som').setAttribute('aria-label', comSom ? 'Desativar som' : 'Ativar som');
+    const v = video(s);
+    if(v){
+      v.muted = !comSom;
+      if(deveTocar){ s.classList.add('is-carregando'); v.play().catch(() => s.classList.remove('is-carregando')); }
+      else v.pause();
+    }
   }
 
   function ir(i){
-    pararVideo(true);
-    ativo = (i + N) % N;
-    decorrido = 0; duracao = TROCA;
-    limparBarras();
-    posicionar();
-    rodar();
-  }
-  const proximo = () => ir(ativo + 1);
-  const anterior = () => ir(ativo - 1);
-
-  function tocarVideo(){
-    const c = cards[ativo];
-    tocando = true; c.classList.add('is-tocando');
-    decorrido = 0; duracao = segundos(c.dataset.dur);
-    if(typeof medir === 'function') medir('depoimento_play', { cliente: c.dataset.cliente });
-    rodar();
-  }
-  function pararVideo(silencioso){
-    if(!tocando) return;
-    tocando = false;
-    cards.forEach(c => c.classList.remove('is-tocando'));
-    if(!silencioso){ decorrido = 0; duracao = TROCA; barraAtual().style.width = ''; rodar(); }
+    if(travado) return;
+    travado = !reduzir;
+    atual = i;
+    deslocar(reduzir);
+    aplicar();
+    if(reduzir) normalizar();
   }
 
-  document.getElementById('stProx').addEventListener('click', proximo);
-  document.getElementById('stAnt').addEventListener('click', anterior);
-  const segurar = valor => { if(reduzir || pausado === valor) return; pausado = valor; if(valor) cancelAnimationFrame(raf); else rodar(); };
-  palco.addEventListener('pointerenter', e => { if(e.pointerType === 'mouse') segurar(true); });
-  palco.addEventListener('pointerleave', e => { if(e.pointerType === 'mouse') segurar(false); });
-  raiz.addEventListener('focusin', () => segurar(true));
-  raiz.addEventListener('focusout', e => { if(!raiz.contains(e.relatedTarget)) segurar(false); });
-  raiz.addEventListener('keydown', e => {
-    if(e.key === 'ArrowRight'){ proximo(); e.preventDefault(); }
-    if(e.key === 'ArrowLeft'){ anterior(); e.preventDefault(); }
+  function normalizar(){
+    travado = false;
+    if(atual > N){ atual -= N; deslocar(true); aplicar(); }
+    else if(atual < 1){ atual += N; deslocar(true); aplicar(); }
+  }
+  trilho.addEventListener('transitionend', e => { if(e.target === trilho) normalizar(); });
+
+  slides.forEach(s => {
+    s.querySelector('.depo-ant').addEventListener('click', () => ir(atual - 1));
+    s.querySelector('.depo-prox').addEventListener('click', () => ir(atual + 1));
+    s.querySelector('.depo-tocar').addEventListener('click', () => { tocando = !tocando; aplicar(); });
+    s.querySelector('.depo-som').addEventListener('click', () => { comSom = !comSom; aplicar(); });
+    s.querySelector('.depo-repetir').addEventListener('click', () => {
+      const v = video(slides[atual]);
+      if(v) v.currentTime = 0;
+      tocando = true;
+      aplicar();
+    });
+  });
+
+  janela.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight'){ ir(atual + 1); e.preventDefault(); }
+    if(e.key === 'ArrowLeft'){ ir(atual - 1); e.preventDefault(); }
   });
 
   let toque = null;
-  palco.addEventListener('pointerdown', e => { toque = { x: e.clientX, y: e.clientY }; });
-  palco.addEventListener('pointerup', e => {
+  janela.addEventListener('pointerdown', e => { toque = { x: e.clientX, y: e.clientY }; });
+  janela.addEventListener('pointerup', e => {
     if(!toque) return;
     const dx = e.clientX - toque.x, dy = e.clientY - toque.y;
     toque = null;
-    if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? proximo() : anterior();
+    if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) ir(atual + (dx < 0 ? 1 : -1));
   });
 
-  new IntersectionObserver(([e]) => {
-    visivel = e.isIntersecting;
-    if(!visivel){ cancelAnimationFrame(raf); pararVideo(true); } else rodar();
-  }, { threshold: .35 }).observe(raiz);
-
-  posicionar();
-  window.addEventListener('resize', posicionar);
+  new IntersectionObserver(([e]) => { visivel = e.isIntersecting; aplicar(); }, { threshold: .4 }).observe(janela);
+  window.addEventListener('resize', () => deslocar(true));
+  deslocar(true);
+  aplicar();
 })();
