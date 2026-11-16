@@ -355,8 +355,8 @@ h1,h2,h3{text-wrap:pretty}
 .dna .eyebrow{color:var(--cream)}
 .dna-titulo{display:flex;flex-direction:column;align-items:center;font-family:var(--font);font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;font-size:clamp(52px,9.6vw,190px);letter-spacing:-.05em;line-height:.88;text-align:center}
 .dna-titulo span{display:block;white-space:nowrap;will-change:transform}
-.dna-l1{color:var(--cream);text-shadow:0 8px 40px rgba(0,0,0,.6)}
-.dna-l2{color:var(--verde);text-shadow:0 8px 40px rgba(0,0,0,.6)}
+.dna-l1{color:var(--cream)}
+.dna-l2{color:var(--verde)}
 .servicos{position:relative;z-index:2;margin-top:-28vh;border-radius:32px 32px 0 0;background:var(--branco);box-shadow:0 -30px 60px -30px rgba(0,0,0,.5)}
 
 .depoimentos{background:var(--escuro);color:var(--cream);overflow:hidden;--foco:var(--verde)}
