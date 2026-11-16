@@ -104,7 +104,11 @@
   function voltarDesktop(){
     if(!prancheta.classList.contains('is-celular')) return;
     palco.classList.remove('is-morph');
+    const congelados = [prancheta, ...prancheta.querySelectorAll('.ed-canvas,.lp-frame,.cena-lp [data-k]')];
+    congelados.forEach(e => e.style.transition = 'none');
     prancheta.classList.remove('is-celular');
+    void prancheta.offsetWidth;
+    congelados.forEach(e => e.style.transition = '');
     ajustar();
   }
 
