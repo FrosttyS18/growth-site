@@ -133,6 +133,13 @@ function montarRede(){
       rede.appendChild(n);
       return n;
     });
+    if(mobile && nosEl[c].length > 1){
+      const gap = 6, medir = () => nosEl[c].map(n => n.offsetWidth);
+      let larguras = medir(), total = larguras.reduce((t, w) => t + w, 0) + gap * (larguras.length - 1);
+      if(total > W - 12){ nosEl[c].forEach(n => n.classList.add('no-mini')); larguras = medir(); total = larguras.reduce((t, w) => t + w, 0) + gap * (larguras.length - 1); }
+      let x = (W - total) / 2;
+      nosEl[c].forEach((n, i) => { n.style.left = (x + larguras[i] / 2) + 'px'; x += larguras[i] + gap; });
+    }
   });
   etapas.forEach((e, c) => {
     e.nos.forEach(([, , liga], i) => liga.forEach(k => {

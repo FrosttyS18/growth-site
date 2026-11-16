@@ -302,7 +302,7 @@ h1,h2,h3{text-wrap:pretty}
 .hero-foot{position:relative;z-index:5;display:flex;justify-content:center}
 
 .orbita{position:relative;overflow:hidden;min-height:max(720px,100svh);display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 45% 40% at 50% 50%,rgba(87,192,51,.1),transparent 70%),var(--branco)}
-.orbita-trilhas{position:absolute;inset:0;pointer-events:none}
+.orbita-trilhas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .orbita-pecas{position:absolute;inset:0;pointer-events:none;z-index:1}
 .orb-carta{position:absolute;left:0;top:0;margin:0;border-radius:10px;overflow:hidden;background:var(--creme);box-shadow:0 0 0 1px rgba(15,15,15,.08),0 14px 30px -14px rgba(15,15,15,.45);transform-origin:50% 50%;will-change:transform,opacity;opacity:0}
 .orb-carta img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;pointer-events:none}
@@ -311,7 +311,7 @@ h1,h2,h3{text-wrap:pretty}
 .orbita-copy-in{display:flex;flex-direction:column;align-items:center;max-width:min(1120px,100%)}
 .orbita-copy{position:relative;z-index:200;text-align:center;display:flex;justify-content:center;padding-top:40px;padding-bottom:40px;pointer-events:none}
 .orbita-copy a{pointer-events:auto}
-.orbita-titulo{margin-top:20px;font-family:var(--font);font-weight:800;font-stretch:115%;font-variation-settings:"wdth" 115;font-size:clamp(42px,7vw,112px);letter-spacing:-.045em;line-height:.92}
+.orbita-titulo{font-family:var(--font);font-weight:800;font-stretch:115%;font-variation-settings:"wdth" 115;font-size:clamp(42px,7vw,112px);letter-spacing:-.045em;line-height:.92}
 .orbita-titulo span{display:block}
 .orbita .lead{margin-top:24px;max-width:42ch;font-size:clamp(18px,1.6vw,22px);color:var(--ink-2)}
 .orbita .acoes{margin-top:32px}
@@ -526,6 +526,7 @@ body[data-view="portfolio"] .provoca{display:none}
   .rede{height:500px}
   .camada-rot{display:none}
   .no{font-size:10px;padding:7px 10px;gap:6px}
+  .no.no-mini{font-size:9px;padding:6px 8px;gap:5px;letter-spacing:.02em}
   .tipos{grid-template-columns:1fr;gap:12px}
   .tipo{min-height:0;padding:26px 22px 22px}
   .tipo h3{margin-top:22px}
