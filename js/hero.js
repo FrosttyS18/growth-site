@@ -196,6 +196,7 @@
       const extra = alvo(el.closest('.cena'), revelar);
       extra.classList.add('is-vis');
       extra.animate([{ opacity: 0, translate: '0 10px' }, { opacity: 1, translate: '0 0' }], { duration: 320, easing: 'ease-out' });
+      contar(extra, s);
     }
   }
 
@@ -248,6 +249,19 @@
     cam.classList.add('is-vis', 'is-sel');
   }
 
+  const numero = n => n.toLocaleString('pt-BR');
+  async function contar(el, s){
+    const alvos = [...el.querySelectorAll('[data-conta]')];
+    if(!alvos.length) return;
+    const passos = 28;
+    for(let i = 1; i <= passos; i++){
+      if(!vivo(s)) return;
+      const k = 1 - Math.pow(1 - i / passos, 3);
+      alvos.forEach(a => a.textContent = numero(Math.round(+a.dataset.conta * k)));
+      await esperar(40);
+    }
+  }
+
   async function executar(t, cena, s){
     const [, nome, acao, k, a, b] = t;
     const c = cursores[nome], el = alvo(cena, k);
@@ -286,7 +300,7 @@
     ROTEIRO[i].tarefas.forEach(([, , acao, k, a, b]) => {
       const el = alvo(cena, k);
       if(acao === 'digitar') el.textContent = el.dataset.txt;
-      if(acao === 'clicar'){ if(!el.matches(SOLTA)) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b) alvo(cena, b).classList.add('is-vis'); }
+      if(acao === 'clicar'){ if(!el.matches(SOLTA)) el.classList.add('is-on'); if(a) cena.classList.add(a); if(b){ const ex = alvo(cena, b); ex.classList.add('is-vis'); ex.querySelectorAll('[data-conta]').forEach(x => x.textContent = numero(+x.dataset.conta)); } }
       if(acao === 'escolher'){ const op = alvo(cena, a); op.classList.add('is-on'); aplicarEscolha(el, op, cena, b); }
       if(acao === 'arrastar'){ el.style.left = a + 'px'; if(b) cena.classList.add(b); }
       el.classList.add('is-vis');
