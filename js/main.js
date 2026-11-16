@@ -292,8 +292,8 @@ const views = { home:$('view-home'), portfolio:$('view-portfolio') };
 function mostrarView(nome){
   Object.entries(views).forEach(([k, v]) => v.classList.toggle('is-on', k === nome));
   document.body.dataset.view = nome;
-  if(nome === 'home'){ document.title = 'Preview: Growth77, site institucional'; window.dispatchEvent(new Event('resize')); }
-  if(nome === 'portfolio') document.title = 'Preview: Growth77, portfólio';
+  if(nome === 'home'){ document.title = 'Growth77 | First Acquisition Agency'; window.dispatchEvent(new Event('resize')); }
+  if(nome === 'portfolio') document.title = 'Portfólio | Growth77';
   marcarMenu();
 }
 

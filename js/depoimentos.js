@@ -3,7 +3,6 @@
   const palco = document.getElementById('storiesPalco');
   const cards = [...palco.querySelectorAll('.story')];
   const nomes = document.getElementById('stNomes');
-  const botaoPausa = document.getElementById('stPausa');
   const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const N = cards.length;
   const TROCA = 6000;
@@ -99,12 +98,11 @@
 
   document.getElementById('stProx').addEventListener('click', proximo);
   document.getElementById('stAnt').addEventListener('click', anterior);
-  botaoPausa.addEventListener('click', () => {
-    pausado = !pausado;
-    botaoPausa.setAttribute('aria-pressed', pausado);
-    botaoPausa.setAttribute('aria-label', pausado ? 'Retomar troca automática' : 'Pausar troca automática');
-    rodar();
-  });
+  const segurar = valor => { if(reduzir || pausado === valor) return; pausado = valor; if(valor) cancelAnimationFrame(raf); else rodar(); };
+  palco.addEventListener('pointerenter', e => { if(e.pointerType === 'mouse') segurar(true); });
+  palco.addEventListener('pointerleave', e => { if(e.pointerType === 'mouse') segurar(false); });
+  raiz.addEventListener('focusin', () => segurar(true));
+  raiz.addEventListener('focusout', e => { if(!raiz.contains(e.relatedTarget)) segurar(false); });
   raiz.addEventListener('keydown', e => {
     if(e.key === 'ArrowRight'){ proximo(); e.preventDefault(); }
     if(e.key === 'ArrowLeft'){ anterior(); e.preventDefault(); }
@@ -124,7 +122,6 @@
     if(!visivel){ cancelAnimationFrame(raf); pararVideo(true); } else rodar();
   }, { threshold: .35 }).observe(raiz);
 
-  if(reduzir){ botaoPausa.setAttribute('aria-pressed', 'true'); botaoPausa.setAttribute('aria-label', 'Retomar troca automática'); }
   posicionar();
   window.addEventListener('resize', posicionar);
 })();

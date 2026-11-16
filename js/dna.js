@@ -34,6 +34,7 @@
 
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = compacto ? .7 : 1;
     estrelas.forEach(e => {
       const x = ((e.x - p * .08 * e.z) % 1 + 1) % 1 * W, y = (e.y + p * .25 * e.z) % 1 * H;
       ctx.fillStyle = `rgba(244,243,234,${.12 + e.z * .25})`;
@@ -42,9 +43,9 @@
 
     const cx = W / 2, cy = H * (.5 + (p - .5) * .12);
     const zoom = 1.12 - p * .22;
-    const inclina = -.24 + p * .1;
-    const comp = W * (compacto ? 2.2 : 1.45) * zoom;
-    const amp = Math.min(H * .2, compacto ? 120 : 220) * zoom;
+    const inclina = compacto ? -1.38 + p * .12 : -.24 + p * .1;
+    const comp = (compacto ? H * 1.3 : W * 1.45) * zoom;
+    const amp = (compacto ? Math.min(W * .3, 130) : Math.min(H * .2, 220)) * zoom;
     const passo = comp / PARES;
     const cos = Math.cos(inclina), sen = Math.sin(inclina);
 
@@ -93,6 +94,7 @@
     });
     ctx.restore();
 
+    if(compacto){ ctx.save(); ctx.globalAlpha = .75; }
     ctx.font = `500 ${compacto ? 10 : 11}px "JetBrains Mono", monospace`;
     ctx.textBaseline = 'middle';
     pontos.forEach(({ i, pa, za }) => {
@@ -109,6 +111,7 @@
       ctx.fillStyle = `rgba(244,243,234,${.5 + za * .5})`;
       ctx.fillText(nome, x + 3, y);
     });
+    if(compacto) ctx.restore();
 
     const desl = (p - .45) * W * (compacto ? .12 : .4);
     l1.style.transform = `translateX(${(-desl).toFixed(1)}px)`;

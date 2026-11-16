@@ -9,11 +9,11 @@
 
   const FONTE = [4, 7, 8, 9, 10, 12, 13, 21, 22, 24, 27, 33, 45, 50, 57, 61, 18, 19, 23, 25, 26, 28, 29, 31];
   const DESKTOP = { arms: 6, turns: 1.05, rMax: .7, birth: .08, cardN: 40, cardH: .22, jitter: .76, ticks: 16, circ: .56 };
-  const MOBILE = { arms: 3, turns: .7, rMax: .8, birth: .08, cardN: 14, cardH: .2, jitter: .76, ticks: 10, circ: .56 };
+  const MOBILE = { arms: 3, turns: .7, rMax: .8, birth: .08, cardN: 24, cardH: .2, jitter: .76, ticks: 10, circ: .56 };
   const MOV = { idle: .57 / 60, scrub: .2 / 1000, spin: -50 * Math.PI / 180 / 60, wobble: 6, wobbleHz: .25, waveDur: 4, burst: 3, burstDur: 2.5, band: 220, pulseSpeed: .19, pulseLen: .05, pulses: 3 };
   const LOOK = { density: .82, innerCap: .45, aspectEnd: .3, blurMax: 12, blurEnd: .18, fade: .15, pad: 10, keepBand: 40, keepScale: .7 };
 
-  let L = DESKTOP, W = 0, H = 0, dpr = 1, cx = 0, cy = 0, rOut = 0, cartas = [], bolsoR = null;
+  let L = DESKTOP, SX = 1, W = 0, H = 0, dpr = 1, cx = 0, cy = 0, rOut = 0, cartas = [], bolsoR = null;
   let jornada = 0, giro = 0, relogio = 0, intro = reduzir ? 99 : -1, ultimo = 0, rodando = false, naTela = false;
   let ultimoScroll = window.scrollY, ponteiro = null, segura = null, freio = 1;
 
@@ -43,9 +43,11 @@
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const b = bolso.getBoundingClientRect();
     cx = W / 2; cy = H / 2;
     rOut = Math.hypot(W, H) / 2 * L.rMax;
-    const b = bolso.getBoundingClientRect();
+    SX = L === MOBILE ? Math.min(1, W / H * 1.15) : 1;
+    if(L === MOBILE) rOut = H * .4;
     bolsoR = { x0: b.left - r.left - LOOK.pad, y0: b.top - r.top - LOOK.pad, x1: b.right - r.left + LOOK.pad, y1: b.bottom - r.top + LOOK.pad };
     if(trocou) montarCartas();
     quadroUnico();
@@ -67,7 +69,7 @@
 
   function ponto(a, u){
     const r = rOut * (L.birth + 1.4 * u), t = anguloDe(a, r);
-    return [cx + Math.cos(t) * r, cy + Math.sin(t) * r, t];
+    return [cx + Math.cos(t) * r * SX, cy + Math.sin(t) * r, t];
   }
 
   function desenharFundo(){
@@ -77,7 +79,7 @@
     ctx.beginPath(); ctx.arc(cx, cy, Math.max(0, frente), 0, Math.PI * 2); ctx.clip();
     ctx.setLineDash([4, 6]);
     ctx.strokeStyle = 'rgba(15,15,15,.14)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(cx, cy, rOut * L.circ, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx, cy, rOut * L.circ * SX, rOut * L.circ, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
     ctx.lineCap = 'round';
     for(let a = 0; a < L.arms; a++){
@@ -90,7 +92,7 @@
       ctx.strokeStyle = 'rgba(15,15,15,.24)'; ctx.lineWidth = 1;
       for(let k = 0; k < L.ticks; k++){
         const r = rOut * (.5 + .5 * k / L.ticks), t = anguloDe(a, r);
-        const tx = -Math.sin(t), ty = Math.cos(t), x = cx + Math.cos(t) * r, y = cy + Math.sin(t) * r;
+        const tx = -Math.sin(t), ty = Math.cos(t), x = cx + Math.cos(t) * r * SX, y = cy + Math.sin(t) * r;
         ctx.beginPath(); ctx.moveTo(x - tx * 5, y - ty * 5); ctx.lineTo(x + tx * 5, y + ty * 5); ctx.stroke();
       }
       for(let p = 0; p < MOV.pulses; p++){
@@ -113,19 +115,19 @@
 
   function posicionarCartas(){
     const frente = intro < 0 ? -1 : raioFrente();
-    const capH = H * L.cardH;
+    const capH = L === MOBILE ? W * .3 : H * L.cardH;
     const banda = L === MOBILE ? 12 : LOOK.keepBand;
     let alvoHover = null, melhor = -1;
     cartas.forEach(c => {
       const j = ((c.fase + jornada) % 1 + 1) % 1;
       const r = raioDe(j), t = anguloDe(c.braco, r);
       const wob = MOV.wobble * Math.sin(relogio * Math.PI * 2 * MOV.wobbleHz + c.semente);
-      let x = cx + Math.cos(t) * r + wob, y = cy + Math.sin(t) * r + wob * .7;
+      let x = cx + Math.cos(t) * r * SX + wob, y = cy + Math.sin(t) * r + wob * .7;
       if(ponteiro){
         const dx = ponteiro.x - x, dy = ponteiro.y - y, d = Math.hypot(dx, dy);
         if(d < 320){ const f = (1 - d / 320) * 8 / Math.max(d, 1); x += dx * f; y += dy * f; }
       }
-      const vao = Math.min(Math.PI * 2 * r / L.arms, rOut / L.turns);
+      const vao = Math.min(Math.PI * 2 * r * SX / L.arms, rOut / L.turns);
       const cresc = LOOK.innerCap + (1 - LOOK.innerCap) * suave(j / .7);
       const h = Math.min(capH, vao * LOOK.density * .8) * cresc;
       const w = h * (1 - .2 * suave(j / LOOK.aspectEnd));

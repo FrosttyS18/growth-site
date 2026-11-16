@@ -5,7 +5,6 @@
   const prancheta = document.getElementById('prancheta');
   const nomePrancheta = document.getElementById('pranchetaNome');
   const camadaCursores = document.getElementById('cursores');
-  const botaoPausa = document.getElementById('pausaHero');
   const botoesEtapa = [...document.querySelectorAll('#etapasHero [data-ir]')];
   const cenas = [...document.querySelectorAll('.cena')];
   const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -76,15 +75,49 @@
     cursores[nome] = c;
   });
 
+  const compacto = () => window.innerWidth <= 768;
+  const CEL = { w: 300, h: 520 };
+
   function ajustar(){
-    const compacto = window.innerWidth <= 768;
-    const w = palco.clientWidth;
-    if(compacto){ escala = w / (W - 56); palco.style.height = Math.round(H * escala) + 'px'; }
-    else { palco.style.height = ''; escala = Math.min(w / W, palco.clientHeight / H); }
-    const h = palco.clientHeight;
-    const x = (w - W * escala) / 2, y = (h - H * escala) / 2;
-    palcoIn.style.transform = `translate(${x}px,${y}px) scale(${escala})`;
-    palcoIn.style.setProperty('--inv', Math.max(.9, Math.min(1 / escala, 1.5)));
+    const w = palco.clientWidth, h = palco.clientHeight;
+    escala = compacto() ? Math.min(w / (W - 56), h / H) : Math.min(w / W, h / H);
+    let s = escala, cx = W / 2, cy = H / 2;
+    if(prancheta.classList.contains('is-celular')){
+      s = Math.min((h - 16) / (CEL.h + 40), (w - 32) / (CEL.w + 40), escala * 2.4);
+    }
+    const x = w / 2 - cx * s, y = h / 2 - cy * s;
+    palcoIn.style.transform = `translate(${x}px,${y}px) scale(${s})`;
+    palcoIn.style.setProperty('--inv', Math.max(.9, Math.min(1 / s, 1.5)));
+  }
+
+  async function virarCelular(s){
+    const c = cursores.Ivan;
+    c.ocupado = true;
+    const borda = 40 + 880, meio = 40 + 260;
+    await mover(c, borda - 2, meio, s);
+    if(!vivo(s)) return;
+    c.el.classList.add('is-click');
+    const medida = document.createElement('em');
+    medida.className = 'medida';
+    medida.textContent = '390 px';
+    prancheta.after(medida);
+    palco.classList.add('is-morph');
+    prancheta.classList.add('is-celular');
+    ajustar();
+    const dir = 40 + (880 + CEL.w) / 2;
+    medida.animate([{ opacity: 0 }, { opacity: 1, offset: .2 }, { opacity: 1, offset: .8 }, { opacity: 0 }], { duration: 1400, fill: 'forwards' });
+    await mover(c, dir - 2, meio, s, 900);
+    c.el.classList.remove('is-click');
+    timers.push(setTimeout(() => medida.remove(), 1400));
+    c.ocupado = false;
+  }
+
+  function voltarDesktop(){
+    palcoIn.querySelectorAll('.medida').forEach(m => m.remove());
+    if(!prancheta.classList.contains('is-celular')) return;
+    palco.classList.remove('is-morph');
+    prancheta.classList.remove('is-celular');
+    ajustar();
   }
 
   function posicao(c){
@@ -241,6 +274,7 @@
     pendentes.forEach(r => r()); pendentes.clear();
     Object.values(cursores).forEach(c => { pararCursor(c); c.ocupado = false; c.fila = Promise.resolve(); c.el.classList.remove('is-click'); });
     palcoIn.querySelectorAll('.sel').forEach(s => s.remove());
+    voltarDesktop();
   }
 
   async function rodar(i){
@@ -250,7 +284,9 @@
     limparCena(cenas[i]);
     mostrarCena(i);
     const r = ROTEIRO[i];
-    marcarEtapa(i, r.dur);
+    const celular = i === 1 && compacto();
+    const dur = r.dur + (celular ? 2600 : 0);
+    marcarEtapa(i, dur);
     Object.values(cursores).forEach(c => vagar(c, s));
     r.tarefas.forEach(t => {
       timers.push(setTimeout(() => {
@@ -258,7 +294,8 @@
         c.fila = c.fila.then(() => vivo(s) ? executar(t, cenas[i], s) : null);
       }, t[0]));
     });
-    await esperar(r.dur);
+    if(celular) timers.push(setTimeout(() => { const c = cursores.Ivan; c.fila = c.fila.then(() => vivo(s) ? virarCelular(s) : null); }, 3900));
+    await esperar(dur);
     if(!vivo(s)) return;
     rodar((i + 1) % ROTEIRO.length);
   }
@@ -273,12 +310,9 @@
   }
 
   function aplicarEstado(){
-    botaoPausa.setAttribute('aria-pressed', pausado);
-    botaoPausa.querySelector('span').textContent = pausado ? 'Retomar animação' : 'Pausar animação';
     if(pausado || !visivel) congelar(atual); else rodar(atual);
   }
 
-  botaoPausa.addEventListener('click', () => { pausado = !pausado; aplicarEstado(); });
   botoesEtapa.forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.ir;
     if(pausado) congelar(i); else rodar(i);
