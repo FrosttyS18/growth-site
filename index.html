@@ -242,12 +242,18 @@
   </div>
 </section>
 
-<section class="sec servicos" id="servicos" aria-labelledby="servicosTitulo">
-  <div class="wrap">
-    <div class="serv-cab">
+<section class="dna" id="servicos" aria-labelledby="servicosTitulo">
+  <div class="dna-palco">
+    <canvas class="dna-canvas" id="dnaCanvas" aria-hidden="true"></canvas>
+    <div class="dna-texto">
       <p class="eyebrow">O que fazemos</p>
-      <h2 class="section-title" id="servicosTitulo">Growth e estratégia são o nosso DNA</h2>
+      <h2 class="dna-titulo" id="servicosTitulo"><span class="dna-l1">Growth e estratégia</span> <span class="dna-l2">são o nosso DNA</span></h2>
     </div>
+  </div>
+</section>
+
+<section class="sec servicos" aria-label="Tipos de growth">
+  <div class="wrap">
     <div class="tipos">
       <article class="tipo">
         <span class="idx">01</span>
@@ -294,93 +300,61 @@
 </section>
 
 <section class="sec depoimentos" id="depoimentos" aria-labelledby="depTitulo">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow">Depoimentos</p>
-        <h2 class="section-title" id="depTitulo">Quem trabalha com a gente conta melhor</h2>
-      </div>
-    </div>
-    <div class="dep-trilho" id="depTrilho">
-      <article class="dep" data-dur="1:12" data-cliente="Grupo IOX">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente Grupo IOX falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">1:12</span>
-          <button class="dep-play" aria-label="Assistir depoimento de Grupo IOX">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+  <div class="wrap dep-cab">
+    <p class="eyebrow">Depoimentos</p>
+    <h2 class="section-title" id="depTitulo">Quem trabalha com a gente conta melhor</h2>
+  </div>
+  <div class="stories" id="stories" role="region" aria-roledescription="carrossel" aria-label="Depoimentos em vídeo">
+    <div class="stories-palco" id="storiesPalco">
+      <article class="story" data-cliente="Grupo IOX" data-dur="1:12" aria-label="Depoimento de Grupo IOX">
+        <img class="st-fundo" src="assets/portfolio/013-grupo-iox-meta-ads.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/grupo-iox.png" alt=""></span><b>Grupo IOX</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de Grupo IOX"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">1:12</span></p>
       </article>
-      <article class="dep" data-dur="0:58" data-cliente="ClickPlanos">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente ClickPlanos falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">0:58</span>
-          <button class="dep-play" aria-label="Assistir depoimento de ClickPlanos">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="ClickPlanos" data-dur="0:58" aria-label="Depoimento de ClickPlanos">
+        <img class="st-fundo" src="assets/portfolio/009-clickplanos-meta-ads.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/clickplanos.png" alt=""></span><b>ClickPlanos</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de ClickPlanos"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">0:58</span></p>
       </article>
-      <article class="dep" data-dur="1:24" data-cliente="Friggi & Secco">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente Friggi & Secco falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">1:24</span>
-          <button class="dep-play" aria-label="Assistir depoimento de Friggi & Secco">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="Friggi & Secco" data-dur="1:24" aria-label="Depoimento de Friggi & Secco">
+        <img class="st-fundo" src="assets/portfolio/022-friggi-secco-meta-ads.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/friggi-secco.png" alt=""></span><b>Friggi & Secco</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de Friggi & Secco"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">1:24</span></p>
       </article>
-      <article class="dep" data-dur="0:47" data-cliente="Med+ Group">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente Med+ Group falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">0:47</span>
-          <button class="dep-play" aria-label="Assistir depoimento de Med+ Group">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="Med+ Group" data-dur="0:47" aria-label="Depoimento de Med+ Group">
+        <img class="st-fundo" src="assets/portfolio/010-med-meta-ads.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/med-group.png" alt=""></span><b>Med+ Group</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de Med+ Group"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">0:47</span></p>
       </article>
-      <article class="dep" data-dur="1:05" data-cliente="Casa 373">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente Casa 373 falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">1:05</span>
-          <button class="dep-play" aria-label="Assistir depoimento de Casa 373">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="Casa 373" data-dur="1:05" aria-label="Depoimento de Casa 373">
+        <span class="st-fundo st-fundo-vazio"></span>
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/casa-373.png" alt=""></span><b>Casa 373</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de Casa 373"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">1:05</span></p>
       </article>
-      <article class="dep" data-dur="1:31" data-cliente="Elo Vendas">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente Elo Vendas falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">1:31</span>
-          <button class="dep-play" aria-label="Assistir depoimento de Elo Vendas">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="Elo Vendas" data-dur="1:31" aria-label="Depoimento de Elo Vendas">
+        <img class="st-fundo" src="assets/portfolio/007-elo-vendas-carrossel.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/elo-vendas.png" alt=""></span><b>Elo Vendas</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de Elo Vendas"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">1:31</span></p>
       </article>
-      <article class="dep" data-dur="0:52" data-cliente="60 Minutos Lavanderia">
-        <div class="dep-video">
-          <div class="ph"><span>Vídeo vertical 9:16 do cliente 60 Minutos Lavanderia falando do resultado, 30 a 90 segundos, com legenda</span></div>
-          <span class="dep-dur">0:52</span>
-          <button class="dep-play" aria-label="Assistir depoimento de 60 Minutos Lavanderia">
-            <svg class="tocar" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="pausa" aria-hidden="true" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dep-barra"><i></i></div>
-        </div>
+      <article class="story" data-cliente="60 Minutos Lavanderia" data-dur="0:52" aria-label="Depoimento de 60 Minutos Lavanderia">
+        <img class="st-fundo" src="assets/portfolio/004-60-minutos-lavanderia-meta-ads.webp" alt="" loading="lazy" decoding="async">
+        <div class="st-topo"><div class="st-barras"></div><p class="st-quem"><span class="st-avatar"><img src="assets/clientes/60-minutos-lavanderia.png" alt=""></span><b>60 Minutos Lavanderia</b><small>Depoimento</small></p></div>
+        <button type="button" class="st-play" aria-label="Assistir depoimento de 60 Minutos Lavanderia"><svg class="tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <p class="st-rodape"><span>Assistir depoimento</span><span class="st-dur">0:52</span></p>
       </article>
     </div>
-    <div class="progresso-dep" aria-hidden="true"><i id="depBarra"></i></div>
+    <div class="wrap stories-ctrl">
+      <button type="button" class="st-seta" id="stAnt" aria-label="Depoimento anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <ol class="st-nomes" id="stNomes"></ol>
+      <button type="button" class="st-seta" id="stProx" aria-label="Próximo depoimento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="st-pausa" id="stPausa" aria-pressed="false" aria-label="Pausar troca automática"><svg class="ic-pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg><svg class="ic-tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>
+    </div>
   </div>
 </section>
 
@@ -455,5 +429,7 @@
 <script src="js/main.js"></script>
 <script src="js/hero.js"></script>
 <script src="js/orbita.js"></script>
+<script src="js/dna.js"></script>
+<script src="js/depoimentos.js"></script>
 </body>
 </html>

@@ -53,9 +53,9 @@
     ]}
   ];
 
-  let escala = 1, atual = 0, sessao = 0, pausado = reduzir, visivel = true, timers = [];
+  let escala = 1, atual = 0, sessao = 0, pausado = reduzir, visivel = true, timers = [], pendentes = new Set();
   const vivo = s => s === sessao;
-  const esperar = ms => new Promise(r => timers.push(setTimeout(r, ms)));
+  const esperar = ms => new Promise(r => { pendentes.add(r); timers.push(setTimeout(() => { pendentes.delete(r); r(); }, ms)); });
 
   const avatares = document.getElementById('avatares');
   const cursores = {};
@@ -238,7 +238,8 @@
   function interromper(){
     sessao++;
     timers.forEach(clearTimeout); timers = [];
-    Object.values(cursores).forEach(c => { pararCursor(c); c.ocupado = false; c.el.classList.remove('is-click'); });
+    pendentes.forEach(r => r()); pendentes.clear();
+    Object.values(cursores).forEach(c => { pararCursor(c); c.ocupado = false; c.fila = Promise.resolve(); c.el.classList.remove('is-click'); });
     palcoIn.querySelectorAll('.sel').forEach(s => s.remove());
   }
 
