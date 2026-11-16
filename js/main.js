@@ -298,7 +298,7 @@ function mostrarView(nome){
   Object.entries(views).forEach(([k, v]) => v.classList.toggle('is-on', k === nome));
   document.body.dataset.view = nome;
   if(nome === 'home'){ document.title = 'Growth77 | First Acquisition Agency'; window.dispatchEvent(new Event('resize')); }
-  if(nome === 'portfolio') document.title = 'Portfólio | Growth77';
+  if(nome === 'portfolio'){ document.title = 'Portfólio | Growth77'; window.dispatchEvent(new Event('resize')); }
   marcarMenu();
 }
 

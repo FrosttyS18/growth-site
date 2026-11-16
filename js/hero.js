@@ -43,15 +43,15 @@
     ]},
     { dur: 7200, tarefas: [
       [200, 'Copy', 'digitar', 'nome'], [600, 'Leo', 'clicar', 'formulario'],
-      [1000, 'Leo', 'escolher', 'meta', 'metaOpt'], [1700, 'Copy', 'digitar', 'orc'],
-      [1700, 'Priscilla', 'digitar', 'loc'], [2300, 'Priscilla', 'escolher', 'loc', 'locOpt', 'is-loc'],
-      [3100, 'Leo', 'arrastar', 'idMin', 30, 'is-idade'], [3100, 'Thainan', 'arrastar', 'idMax', 115, 'is-idade'],
-      [3600, 'Design', 'desenhar', 'medidor', 600], [4000, 'Creator', 'desenhar', 'estim', 600],
-      [5200, 'Leo', 'clicar', 'publicar', 'is-pub', 'status']
+      [1000, 'Leo', 'escolher', 'meta', 'metaOpt'], [1400, 'Thainan', 'digitar', 'orc'],
+      [1700, 'Ivan', 'digitar', 'loc'], [2300, 'Ivan', 'escolher', 'loc', 'locOpt', 'is-loc'],
+      [2900, 'Leo', 'arrastar', 'idMin', 30, 'is-idade'], [3600, 'Leo', 'arrastar', 'idMax', 115, 'is-idade'],
+      [3500, 'Meta', 'desenhar', 'medidor', 600], [4300, 'Meta', 'desenhar', 'estim', 600],
+      [5300, 'Leo', 'clicar', 'publicar', 'is-pub', 'status']
     ]},
     { dur: 6600, tarefas: [
-      [300, 'Leo', 'clicar', 'criar', 'is-painel'], [1000, 'Fabrizio', 'digitar', 'evento'],
-      [1800, 'Ivan', 'digitar', 'valor'], [2700, 'Leo', 'clicar', 'tgLead'],
+      [300, 'Leo', 'clicar', 'criar', 'is-painel'], [1000, 'Copy', 'digitar', 'evento'],
+      [1800, 'Thainan', 'digitar', 'valor'], [2700, 'Leo', 'clicar', 'tgLead'],
       [3400, 'Leo', 'clicar', 'criarOk', 'is-criado', 'linhaNova']
     ]}
   ];
@@ -84,15 +84,44 @@
 
   function ajustar(){
     const w = palco.clientWidth, h = palco.clientHeight;
-    const lateral = window.innerWidth >= 1181;
-    escala = compacto() ? Math.min(w / (W - 56), h / H) : lateral ? Math.min(w / 904, h / 556) : Math.min(w / W, h / H);
-    let s = escala, cx = W / 2, cy = lateral ? 287 : H / 2;
+    const lateral = !compacto();
+    const larga = lateral && w / h > 2.05;
+    prancheta.classList.toggle('is-larga', larga);
+    const PW = larga ? 1140 : 880;
+    escala = compacto() ? Math.min(w / (W - 56), h / H) : Math.min(w / (PW + 24), h / 556);
+    let s = escala, cx = lateral ? 40 + PW / 2 : W / 2, cy = lateral ? 287 : H / 2;
     if(prancheta.classList.contains('is-celular')){
       s = Math.min((h - 16) / (CEL.h + 40), (w - 32) / (CEL.w + 40), escala * 2.4);
     }
     const x = w / 2 - cx * s, y = h / 2 - cy * s;
     palcoIn.style.transform = `translate(${x}px,${y}px) scale(${s})`;
     palcoIn.style.setProperty('--inv', Math.max(.9, Math.min(1 / s, 1.5)));
+    alinharHud(lateral && !prancheta.classList.contains('is-celular'));
+  }
+
+  const hud = heroCard.querySelector('.hud');
+  const topo = document.querySelector('.site-header .wrap');
+  function alinharTopo(ativo, r){
+    if(!ativo){ topo.style.width = ''; topo.style.marginLeft = ''; topo.classList.remove('is-alinhado', 'is-justo'); return; }
+    topo.classList.add('is-alinhado');
+    topo.classList.remove('is-justo');
+    const esq = 22, dir = 8, borda = parseFloat(getComputedStyle(topo.parentElement).paddingLeft) || 0;
+    topo.style.width = Math.round(r.width + esq + dir) + 'px';
+    if(topo.scrollWidth > topo.clientWidth + 1) topo.classList.add('is-justo');
+    const extra = Math.max(0, topo.scrollWidth - topo.clientWidth);
+    topo.style.width = Math.round(r.width + esq + dir + extra) + 'px';
+    topo.style.marginLeft = Math.round(r.left - esq - borda - extra / 2) + 'px';
+  }
+  function alinharHud(ativo){
+    const visivelHero = !!prancheta.offsetParent;
+    alinharTopo(ativo && visivelHero, prancheta.getBoundingClientRect());
+    if(!ativo){ hud.style.width = ''; hud.classList.remove('is-alinhado', 'is-curta'); return; }
+    const largura = Math.round(prancheta.getBoundingClientRect().width);
+    hud.style.width = largura + 'px';
+    hud.classList.add('is-alinhado');
+    hud.classList.remove('is-curta');
+    const naoCabe = [...hud.querySelectorAll('.etapas-hero button')].some(b => b.scrollWidth > b.clientWidth + 1);
+    hud.classList.toggle('is-curta', naoCabe);
   }
 
   function virarCelular(s){
@@ -281,17 +310,32 @@
     c.ocupado = false;
   }
 
+  const TIMES = [['Wesley', 'Design', 'Creator', 'Priscilla'], ['Copy', 'Thainan', 'Ivan'], ['Leo', 'Meta', 'Fabrizio']];
+  const timeDe = nome => TIMES.find(g => g.includes(nome)) || [];
+  function limites(){
+    return { x0: prancheta.offsetLeft + 24, x1: prancheta.offsetLeft + prancheta.offsetWidth - 90, y0: prancheta.offsetTop + 20, y1: prancheta.offsetTop + prancheta.offsetHeight - 40 };
+  }
+  function parceiro(c){
+    const ocupados = Object.values(cursores).filter(o => o !== c && o.ocupado);
+    if(!ocupados.length) return null;
+    const meus = ocupados.filter(o => timeDe(c.nome).includes(o.nome));
+    const lista = meus.length ? meus : ocupados;
+    return posicao(lista[Math.floor(Math.random() * lista.length)]);
+  }
   async function vagar(c, s){
     while(vivo(s)){
       if(!c.ocupado){
-        const lado = Math.random();
-        const x = lado < .5 ? 60 + Math.random() * 840 : (Math.random() < .5 ? 10 + Math.random() * 60 : 890 + Math.random() * 50);
-        const y = lado < .5 ? (Math.random() < .5 ? 8 + Math.random() * 30 : 560 + Math.random() * 30) : 60 + Math.random() * 480;
-        await mover(c, x, y, s, 1800 + Math.random() * 1600);
+        const L = limites(), p = parceiro(c);
+        let x, y;
+        if(p){ x = p.x + (Math.random() - .5) * 170; y = p.y + 24 + Math.random() * 80; }
+        else { x = L.x0 + Math.random() * (L.x1 - L.x0); y = L.y0 + Math.random() * (L.y1 - L.y0); }
+        x = Math.max(L.x0, Math.min(L.x1, x)); y = Math.max(L.y0, Math.min(L.y1, y));
+        await mover(c, x, y, s, 900 + Math.random() * 900);
       }
-      await esperar(500 + Math.random() * 1400);
+      await esperar(350 + Math.random() * 900);
     }
   }
+
 
   function limparCena(cena){
     cena.className = cena.className.split(' ').filter(c => c === 'cena' || c.startsWith('cena-')).join(' ');
@@ -402,6 +446,7 @@
   });
 
   ajustar();
-  window.addEventListener('resize', ajustar);
+  requestAnimationFrame(() => palco.classList.add('is-pronto'));
+  window.addEventListener('resize', () => { if(!compacto()) voltarDesktop(); ajustar(); });
   aplicarEstado();
 })();
