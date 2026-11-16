@@ -19,7 +19,7 @@
   --foco:#0f0f0f;
 
   --font:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --font-mono:"Inter","Helvetica Neue",Arial,sans-serif;
   --display-wdth:115;
 
   --max:1440px;
@@ -204,7 +204,7 @@ h1,h2,h3{text-wrap:pretty}
 .k-letra svg{display:block;width:100%;height:100%;overflow:visible}
 .k-letra path[fill="#57c033"]{fill:var(--cream);transition:fill .45s ease}
 .cena-logo.is-cor .k-letra path[fill="#57c033"]{fill:var(--verde)}
-.k-tag{left:102px;top:296px;font-family:var(--font-mono);font-size:19px;letter-spacing:.79em;color:rgba(244,243,234,.78);white-space:nowrap}
+.k-tag{left:102px;top:296px;font-family:var(--font-mono);font-size:19px;letter-spacing:.9em;color:rgba(244,243,234,.78);white-space:nowrap}
 
 .cena-meta{background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#1c2b33}
 .cena-meta [data-k]{position:static}
@@ -364,8 +364,9 @@ h1,h2,h3{text-wrap:pretty}
 .dna-canvas{position:absolute;inset:0;width:100%;height:100%}
 .dna-texto{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;gap:24px;pointer-events:none}
 .dna .eyebrow{color:var(--cream)}
-.dna-titulo{display:flex;flex-direction:column;align-items:center;font-family:var(--font);font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;font-size:clamp(52px,9.6vw,190px);letter-spacing:-.05em;line-height:.88;text-align:center}
+.dna-titulo{display:flex;flex-direction:column;align-items:center;font-family:var(--font);font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;font-size:clamp(52px,6.4vw,140px);letter-spacing:-.05em;line-height:.9;text-align:center}
 .dna-titulo span{display:block;white-space:nowrap;will-change:transform}
+.dna-texto::before{content:"";position:absolute;left:50%;top:50%;width:min(1500px,115%);height:230%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(15,15,15,.9),rgba(15,15,15,.72) 55%,rgba(15,15,15,0));z-index:-1;pointer-events:none}
 .dna-l1{color:var(--cream)}
 .dna-l2{color:var(--verde)}
 .servicos{position:relative;z-index:2;margin-top:-28vh;border-radius:32px 32px 0 0;background:var(--branco);box-shadow:0 -30px 60px -30px rgba(0,0,0,.5)}
@@ -516,7 +517,7 @@ body[data-view="portfolio"] .provoca{display:none}
   .orbita .lead{font-size:16px;max-width:30ch}
   .orbita .acoes{margin-top:24px}
   .dna-titulo{font-size:clamp(36px,11vw,64px)}
-  .dna-texto::before{content:"";position:absolute;left:50%;top:50%;width:150%;height:170%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(15,15,15,.92),rgba(15,15,15,.78) 55%,rgba(15,15,15,0));z-index:-1}
+  .dna-texto::before{width:150%;height:170%;background:radial-gradient(closest-side,rgba(15,15,15,.92),rgba(15,15,15,.78) 55%,rgba(15,15,15,0))}
   .site-header .wrap{height:56px;padding:0 6px 0 18px}
   .marca-svg{height:26px;width:calc(26px * 5.244)}
   .sec-head{margin-bottom:36px}

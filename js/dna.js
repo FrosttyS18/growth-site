@@ -34,7 +34,7 @@
 
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    ctx.globalAlpha = compacto ? .7 : 1;
+    ctx.globalAlpha = compacto ? .7 : .8;
     estrelas.forEach(e => {
       const x = ((e.x - p * .08 * e.z) % 1 + 1) % 1 * W, y = (e.y + p * .25 * e.z) % 1 * H;
       ctx.fillStyle = `rgba(244,243,234,${.12 + e.z * .25})`;
@@ -95,7 +95,7 @@
     ctx.restore();
 
     if(compacto){ ctx.save(); ctx.globalAlpha = .75; }
-    ctx.font = `500 ${compacto ? 10 : 11}px "JetBrains Mono", monospace`;
+    ctx.font = `600 ${compacto ? 10 : 11}px "Inter", sans-serif`;
     ctx.textBaseline = 'middle';
     pontos.forEach(({ i, pa, za }) => {
       if(i % 6 !== 3 || za < .2) return;
@@ -113,7 +113,7 @@
     });
     if(compacto) ctx.restore();
 
-    const desl = (p - .45) * W * (compacto ? .12 : .4);
+    const desl = (p - .45) * W * (compacto ? .06 : .1);
     l1.style.transform = `translateX(${(-desl).toFixed(1)}px)`;
     l2.style.transform = `translateX(${desl.toFixed(1)}px)`;
   }

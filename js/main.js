@@ -198,7 +198,7 @@ function pingarChuva(t){
     const dt = ultimoChuva ? (t - ultimoChuva) / 1000 : 0; ultimoChuva = t;
     const w = chuva.clientWidth, hgt = chuva.clientHeight;
     ctxChuva.clearRect(0, 0, w, hgt);
-    ctxChuva.font = '500 11px "JetBrains Mono", monospace';
+    ctxChuva.font = '600 11px "Inter", sans-serif';
     colunas.forEach(c => {
       c.y = (c.y + c.vel * dt) % 18;
       if(Math.random() < .15) c.digs[Math.floor(Math.random() * c.digs.length)] = Math.floor(Math.random() * 10);
