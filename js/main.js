@@ -33,9 +33,7 @@ $('mobileMenu').querySelectorAll('a').forEach(a => a.addEventListener('click', f
 document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenu(); });
 
 function atualizarInterface(){
-  const passouHero = window.scrollY > $('hero').offsetHeight - 80;
   $('siteHeader').classList.toggle('is-solid', window.scrollY > 20);
-  $('ctaFixa').classList.toggle('is-on', passouHero);
 }
 
 let agendado = false;
