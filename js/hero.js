@@ -30,29 +30,29 @@
       [2000, 'Design', 'mostrar', 'paleta'], [2500, 'Wesley', 'clicar', 'swVerde', 'is-cor'], [2700, 'Copy', 'digitar', 'tag']
     ]},
     { dur: 7800, tarefas: [
-      [100, 'Leo', 'desenhar', 'fundo', 500], [500, 'Ivan', 'desenhar', 'nav', 400], [700, 'Priscilla', 'desenhar', 'selo', 350],
-      [900, 'Copy', 'digitar', 'titulo'], [900, 'Creator', 'desenhar', 'img', 650], [1800, 'Thainan', 'desenhar', 'texto', 450],
-      [2200, 'Design', 'desenhar', 'cta', 400], [2500, 'Fabrizio', 'desenhar', 'secao', 550], [2700, 'Priscilla', 'desenhar', 'cards', 600],
-      [3000, 'Design', 'clicar', 'corCta', 'is-cta'],
-      [3600, 'Ivan', 'clicar', 'bpCel', 'is-cel'], [6000, 'Wesley', 'clicar', 'publicarLp', null, 'toastLp']
+      [100, 'Wesley', 'desenhar', 'fundo', 500], [500, 'Design', 'desenhar', 'nav', 400], [700, 'Ivan', 'desenhar', 'selo', 350],
+      [900, 'Thainan', 'digitar', 'titulo'], [1100, 'Wesley', 'desenhar', 'img', 650], [1600, 'Ivan', 'desenhar', 'texto', 450],
+      [2100, 'Design', 'desenhar', 'cta', 400], [2300, 'Wesley', 'desenhar', 'secao', 550], [2700, 'Design', 'desenhar', 'cards', 500],
+      [3200, 'Design', 'clicar', 'corCta', 'is-cta'],
+      [3700, 'Wesley', 'clicar', 'bpCel', 'is-cel'], [6000, 'Wesley', 'clicar', 'publicarLp', null, 'toastLp']
     ]},
     { dur: 5000, tarefas: [
-      [100, 'Creator', 'desenhar', 'peca', 800], [400, 'Priscilla', 'mostrar', 'painel'],
-      [1100, 'Copy', 'digitar', 'cliente'], [1700, 'Design', 'clicar', 'feed'],
-      [2100, 'Meta', 'digitar', 'canal'], [3100, 'Creator', 'clicar', 'exportar', null, 'toastCr']
+      [100, 'Wesley', 'desenhar', 'peca', 800], [400, 'Design', 'mostrar', 'painel'],
+      [1100, 'Thainan', 'digitar', 'cliente'], [1700, 'Design', 'clicar', 'feed'],
+      [2100, 'Ivan', 'digitar', 'canal'], [3100, 'Wesley', 'clicar', 'exportar', null, 'toastCr']
     ]},
     { dur: 7200, tarefas: [
-      [200, 'Copy', 'digitar', 'nome'], [600, 'Meta', 'clicar', 'formulario'],
-      [1000, 'Ivan', 'escolher', 'meta', 'metaOpt'], [1300, 'Leo', 'digitar', 'orc'],
+      [200, 'Copy', 'digitar', 'nome'], [600, 'Leo', 'clicar', 'formulario'],
+      [1000, 'Leo', 'escolher', 'meta', 'metaOpt'], [1700, 'Copy', 'digitar', 'orc'],
       [1700, 'Priscilla', 'digitar', 'loc'], [2300, 'Priscilla', 'escolher', 'loc', 'locOpt', 'is-loc'],
       [3100, 'Leo', 'arrastar', 'idMin', 30, 'is-idade'], [3100, 'Thainan', 'arrastar', 'idMax', 115, 'is-idade'],
       [3600, 'Design', 'desenhar', 'medidor', 600], [4000, 'Creator', 'desenhar', 'estim', 600],
-      [5200, 'Meta', 'clicar', 'publicar', 'is-pub', 'status']
+      [5200, 'Leo', 'clicar', 'publicar', 'is-pub', 'status']
     ]},
     { dur: 6600, tarefas: [
-      [300, 'Fabrizio', 'clicar', 'criar', 'is-painel'], [1000, 'Fabrizio', 'digitar', 'evento'],
+      [300, 'Leo', 'clicar', 'criar', 'is-painel'], [1000, 'Fabrizio', 'digitar', 'evento'],
       [1800, 'Ivan', 'digitar', 'valor'], [2700, 'Leo', 'clicar', 'tgLead'],
-      [3400, 'Fabrizio', 'clicar', 'criarOk', 'is-criado', 'linhaNova']
+      [3400, 'Leo', 'clicar', 'criarOk', 'is-criado', 'linhaNova']
     ]}
   ];
 
@@ -350,9 +350,9 @@
     const dur = r.dur + atraso - (celular ? 1400 : 0);
     if(celular){
       cenas[i].classList.add('is-cta');
-      const c = cursores.Ivan;
+      const c = cursores.Wesley;
       timers.push(setTimeout(() => {
-        c.fila = c.fila.then(() => vivo(s) ? executar([0, 'Ivan', 'clicar', 'bpCel', 'is-cel'], cenas[i], s) : null).then(() => vivo(s) ? esperar(250).then(() => virarCelular(s)) : null);
+        c.fila = c.fila.then(() => vivo(s) ? executar([0, 'Wesley', 'clicar', 'bpCel', 'is-cel'], cenas[i], s) : null).then(() => vivo(s) ? esperar(250).then(() => virarCelular(s)) : null);
       }, 500));
     }
     marcarEtapa(i, dur);
