@@ -20,7 +20,7 @@
   };
 
   const SOLTA = '.lp-cta,.cr-exportar,.ma-publicar,.ga-criar,.ga-ok,.ed-publicar';
-  const NOMES_CENA = ['Growth77 / Logo', 'Growth77 / Landing page', 'Growth77 / Criativo 4:5', 'Meta Ads / Campanha de Leads', 'Google Analytics / Eventos'];
+  const NOMES_CENA = ['Growth77 / Logo', 'One Drop / Lookbook Drop 07', 'Growth77 / Criativo 4:5', 'Meta Ads / Campanha de Leads', 'Google Analytics / Eventos'];
   const ROTEIRO = [
     { dur: 5000, escura: true, tarefas: [
       [0, 'Wesley', 'desenhar', 'guiaH', 450],
@@ -29,11 +29,12 @@
       [1050, 'Creator', 'desenhar', 'l7a', 420], [1200, 'Meta', 'desenhar', 'l7b', 420],
       [2000, 'Design', 'mostrar', 'paleta'], [2500, 'Wesley', 'clicar', 'swVerde', 'is-cor'], [2700, 'Copy', 'digitar', 'tag']
     ]},
-    { dur: 6400, tarefas: [
-      [100, 'Leo', 'desenhar', 'nav', 450], [500, 'Copy', 'digitar', 'titulo'], [500, 'Creator', 'desenhar', 'img', 700],
-      [1400, 'Thainan', 'desenhar', 'texto', 450], [1900, 'Design', 'desenhar', 'cta', 400], [2300, 'Priscilla', 'desenhar', 'cards', 550],
-      [2700, 'Design', 'clicar', 'corVerde', 'is-verde'], [2900, 'Fabrizio', 'desenhar', 'logos', 450],
-      [3600, 'Ivan', 'clicar', 'bpCel', 'is-cel'], [5000, 'Wesley', 'clicar', 'publicarLp', null, 'toastLp']
+    { dur: 7800, tarefas: [
+      [100, 'Leo', 'desenhar', 'fundo', 500], [500, 'Ivan', 'desenhar', 'nav', 400], [700, 'Priscilla', 'desenhar', 'selo', 350],
+      [900, 'Copy', 'digitar', 'titulo'], [900, 'Creator', 'desenhar', 'img', 650], [1800, 'Thainan', 'desenhar', 'texto', 450],
+      [2200, 'Design', 'desenhar', 'cta', 400], [2500, 'Fabrizio', 'desenhar', 'secao', 550], [2700, 'Priscilla', 'desenhar', 'cards', 600],
+      [3000, 'Design', 'clicar', 'corCta', 'is-cta'],
+      [3600, 'Ivan', 'clicar', 'bpCel', 'is-cel'], [6000, 'Wesley', 'clicar', 'publicarLp', null, 'toastLp']
     ]},
     { dur: 5000, tarefas: [
       [100, 'Creator', 'desenhar', 'peca', 800], [400, 'Priscilla', 'mostrar', 'painel'],
@@ -331,17 +332,24 @@
     mostrarCena(i);
     const r = ROTEIRO[i];
     const celular = i === 1 && compacto();
-    const dur = r.dur + (celular ? 1200 : 0);
+    const atraso = celular ? 1900 : 0;
+    const dur = r.dur + atraso - (celular ? 1400 : 0);
+    if(celular){
+      cenas[i].classList.add('is-cta');
+      const c = cursores.Ivan;
+      timers.push(setTimeout(() => {
+        c.fila = c.fila.then(() => vivo(s) ? executar([0, 'Ivan', 'clicar', 'bpCel', 'is-cel'], cenas[i], s) : null).then(() => vivo(s) ? esperar(250).then(() => virarCelular(s)) : null);
+      }, 500));
+    }
     marcarEtapa(i, dur);
     Object.values(cursores).forEach(c => vagar(c, s));
     r.tarefas.forEach(t => {
-      if(celular && t[3] === 'publicarLp') return;
+      if(celular && ['publicarLp', 'bpCel', 'corCta'].includes(t[3])) return;
       timers.push(setTimeout(() => {
         const c = cursores[t[1]];
         c.fila = c.fila.then(() => vivo(s) ? executar(t, cenas[i], s) : null);
-      }, t[0]));
+      }, t[0] + atraso));
     });
-    if(celular) timers.push(setTimeout(() => { const c = cursores.Ivan; c.fila = c.fila.then(() => vivo(s) ? esperar(500).then(() => virarCelular(s)) : null); }, 3600));
     await esperar(dur);
     if(!vivo(s)) return;
     rodar((i + 1) % ROTEIRO.length);
