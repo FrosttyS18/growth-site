@@ -84,8 +84,9 @@
 
   function ajustar(){
     const w = palco.clientWidth, h = palco.clientHeight;
-    escala = compacto() ? Math.min(w / (W - 56), h / H) : Math.min(w / W, h / H);
-    let s = escala, cx = W / 2, cy = H / 2;
+    const lateral = window.innerWidth >= 1181;
+    escala = compacto() ? Math.min(w / (W - 56), h / H) : lateral ? Math.min(w / 904, h / 556) : Math.min(w / W, h / H);
+    let s = escala, cx = W / 2, cy = lateral ? 287 : H / 2;
     if(prancheta.classList.contains('is-celular')){
       s = Math.min((h - 16) / (CEL.h + 40), (w - 32) / (CEL.w + 40), escala * 2.4);
     }

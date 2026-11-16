@@ -6,22 +6,16 @@
   const originais = [...trilho.querySelectorAll('.depo-slide')];
   const N = originais.length;
 
-  const clonar = s => {
-    const c = s.cloneNode(true);
-    c.classList.add('is-clone');
-    c.setAttribute('aria-hidden', 'true');
-    c.inert = true;
-    return c;
-  };
-  trilho.prepend(clonar(originais[N - 1]));
-  originais.forEach(s => trilho.append(clonar(s)));
-  const slides = [...trilho.children];
+  const slides = originais;
+  const midia = janela.parentElement;
 
-  let atual = 1, visivel = false, comSom = false, tocando = !reduzir, travado = false;
+  let atual = 0, visivel = false, comSom = false, tocando = !reduzir;
 
   function deslocar(semAnimacao){
     const w = slides[0].offsetWidth;
     const compacto = window.innerWidth <= 768;
+    if(!compacto) janela.style.width = Math.max(w, window.innerWidth - midia.getBoundingClientRect().left) + 'px';
+    else janela.style.width = '';
     const base = compacto ? (janela.clientWidth - w) / 2 : 0;
     trilho.classList.toggle('sem-transicao', !!semAnimacao);
     trilho.style.transform = `translateX(${(base - atual * w).toFixed(1)}px)`;
@@ -73,20 +67,10 @@
   }
 
   function ir(i){
-    if(travado) return;
-    travado = !reduzir;
-    atual = i;
+    atual = (i + N) % N;
     deslocar(reduzir);
     aplicar();
-    if(reduzir) normalizar();
   }
-
-  function normalizar(){
-    travado = false;
-    if(atual > N){ atual -= N; deslocar(true); aplicar(); }
-    else if(atual < 1){ atual += N; deslocar(true); aplicar(); }
-  }
-  trilho.addEventListener('transitionend', e => { if(e.target === trilho) normalizar(); });
 
   slides.forEach(s => {
     s.querySelector('.depo-ant').addEventListener('click', () => ir(atual - 1));
